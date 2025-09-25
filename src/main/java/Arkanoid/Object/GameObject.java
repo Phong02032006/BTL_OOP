@@ -1,6 +1,12 @@
 package Arkanoid.Object;
 
 import javafx.scene.canvas.GraphicsContext;
+/*
+ * x hoành độ (pixel)
+ * y tung độ (pixel)
+ * width chiều rộng (pixel)
+ * height chiều cao (pixel)
+ */
 
 public abstract class GameObject {
     protected double x, y;
