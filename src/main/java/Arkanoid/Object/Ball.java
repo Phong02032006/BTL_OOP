@@ -10,7 +10,10 @@ public class Ball extends MovableObject {
         super(x, y, radius, radius, dx, dy);
         this.speed = speed;
     }
-
+    /*
+    - check conllision phai sua lai de tro thanh check su va cham giua hinh tron va hinh chu nhat.
+    - ham check collision hien tai chi check va cham giua 2 hinh chu nhat thoi nen neu chay se xay ra loi.
+     */
     public boolean checkCollision(GameObject other) {
         return (x < other.x + other.width &&    // mép trái bóng < mép phải đối tượng
                 x + width > other.x &&          // mép phải bóng > mép trái đối tượng
@@ -39,11 +42,8 @@ public class Ball extends MovableObject {
         gc.fillOval(x, y, width, height);
     }
 
-    public double getSpeed() {
-        return speed;
-    }
+    public double getSpeed() { return speed; }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
+    public void setSpeed(double speed) { this.speed = speed;}
+
 }
