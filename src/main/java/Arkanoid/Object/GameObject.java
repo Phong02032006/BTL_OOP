@@ -23,7 +23,6 @@ public abstract class GameObject {
 
     public abstract void render(GraphicsContext gc);
 
-
     public double getX() {
         return x;
     }
@@ -45,7 +44,6 @@ public abstract class GameObject {
     }
 
     public void setWidth(double width) {
-
         this.width = width;
     }
 
