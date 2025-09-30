@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 
 public class UnbreakableBrick extends Brick {
     public UnbreakableBrick(int x, int y, int width, int height) {
-        super(x,y,width, height, -1);
+        super(x,y,width, height, -1,"Unbreakable");
     }
     @Override
     public void render(GraphicsContext gc){
