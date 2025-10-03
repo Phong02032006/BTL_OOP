@@ -3,7 +3,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 public class Paddle extends MovableObject {
     private double speed;
-    //private PowerUp currentPowerUp;
+    private PowerUp currentPowerUp;
 
     public Paddle(double x, double y, double width, double height, double speed) {
         super(x, y, width, height, 0, 0);
@@ -20,9 +20,23 @@ public class Paddle extends MovableObject {
     public void moveRight() {
         x += speed;
     }
-    /*public void applyPowerUp(PowerUp powerUp) {
+    public void applyPowerUp(PowerUp powerUp) {
         this.currentPowerUp = powerUp;
-    }*/
+        if (powerUp != null) {
+            powerUp.applyEffect(this, null); // Ball sẽ được truyền từ GameManager
+        }
+    }
+    
+    public PowerUp getCurrentPowerUp() {
+        return currentPowerUp;
+    }
+    
+    public void removeCurrentPowerUp() {
+        if (currentPowerUp != null) {
+            currentPowerUp.removeEffect(this, null);
+            currentPowerUp = null;
+        }
+    }
     @Override
     public void update() {
     }

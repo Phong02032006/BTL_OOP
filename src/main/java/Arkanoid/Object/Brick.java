@@ -4,10 +4,12 @@ import javafx.scene.canvas.GraphicsContext;
 
 public abstract class Brick extends GameObject {
     protected int hitPoints;
+    protected String type;
 
-    protected Brick(double x, double y, double width, double height, int hitPoints) {
+    protected Brick(double x, double y, double width, double height, int hitPoints, String type) {
         super(x, y, width, height);
         this.hitPoints = hitPoints;
+        this.type = type;
     }
 
     public boolean takeHit() {
@@ -26,6 +28,14 @@ public abstract class Brick extends GameObject {
 
     public int getHitPoints() {
         return hitPoints;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
