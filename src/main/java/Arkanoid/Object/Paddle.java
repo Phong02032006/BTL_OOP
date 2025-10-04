@@ -13,12 +13,18 @@ public class Paddle extends MovableObject {
         Speed ở đây là khoảng mà paddle sẽ dịch chuyển mỗi khi hàm được gọi.
         Ví dụ moveLeft thì paddle sẽ "dịch chuyển" 10 pixel tương tự như hàm moveRight.
      */
-    public void moveLeft() {
+    public void moveLeft(double screenWidth) {
         x -= speed;
+        if (x < 0) {
+            x = 0; // chạm biên trái
+        }
     }
 
-    public void moveRight() {
+    public void moveRight(double screenWidth) {
         x += speed;
+        if (x + width > screenWidth) {
+            x = screenWidth - width; // chạm biên phải
+        }
     }
     public void applyPowerUp(PowerUp powerUp) {
         this.currentPowerUp = powerUp;
