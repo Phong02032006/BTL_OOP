@@ -42,7 +42,6 @@ public abstract class PowerUp extends GameObject {
         this.color = color;
     }
 
-
     @Override
     public void update() {
         // PowerUp rơi xuống với tốc độ cố định

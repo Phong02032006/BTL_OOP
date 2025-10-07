@@ -26,14 +26,30 @@ public class Ball extends MovableObject {
     }
 
     @Override
-    public void update() {
-        move();
-        if (x <= 0 || x + width >= 800) {
+    public void move(){
+        x += dx *  speed;
+        y += dy * speed;
+
+        //BẬT NGANG
+        if(x<=0){
+            x=0 + width;
+            dx= -dx;
+        }
+        if(x+ width>=800){
+            x=800 - width;
             dx = -dx;
         }
-        if (y <= 0) {
-            dy = -dy;
+        //BẬT DỌC
+        if(y<=0){
+            y=0;
+            dy= -dy;
         }
+
+    }
+
+    @Override
+    public void update() {
+        move();
     }
 
     @Override
@@ -45,5 +61,9 @@ public class Ball extends MovableObject {
     public double getSpeed() { return speed; }
 
     public void setSpeed(double speed) { this.speed = speed;}
+
+    public void setDirectionY(int dy){
+        this.dy = dy;
+    }
 
 }

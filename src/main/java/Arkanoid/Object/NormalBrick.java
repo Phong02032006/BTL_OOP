@@ -1,5 +1,6 @@
 package Arkanoid.Object;
 
+import Arkanoid.util.Constant;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 public class NormalBrick extends Brick {
@@ -9,15 +10,15 @@ public class NormalBrick extends Brick {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(Color.ORANGE);
+        gc.setFill(Constant.BRICK_COLOR);
         gc.fillRect(x,y,width,height);
 
         gc.setStroke(Color.BLACK);
-        gc.strokeLine(x+0.5, y+0.5, width-1, height -1 );
+        gc.strokeRect(x+0.5, y+0.5, width-1, height -1 );
 
         // debug hitPoints (xoa khi nop)
         gc.setFill(Color.BLACK);
-        gc.fillText("1", x + width / 2 - 3, y + height / 2 + 4);
+        gc.fillText(String.valueOf(hitPoints), x + width / 2 - 3, y + height / 2 + 4);
     }
 
 }

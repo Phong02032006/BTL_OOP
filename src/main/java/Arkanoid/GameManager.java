@@ -5,6 +5,7 @@ import Arkanoid.Object.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import Arkanoid.util.Constant;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 public class GameManager {
     private static GameManager instance;
+    private boolean ballLaunched;
 
     public static GameManager getInstance() {
         if (instance == null) {
@@ -30,40 +32,114 @@ public class GameManager {
     private int lives;
     private String state;
 
-    private static final int width = 800;
-    private static final int height = 600;
+    private static final int width = Constant.SCREEN_WIDTH;
+    private static final int height = Constant.SCREEN_HEIGHT;
 
     /*
     .Khoi tao tro choi
      */
+
+    private void initBricks() {
+        bricks = new ArrayList<>();
+        double offsetX = (width - Constant.BRICK_COLUMNS * Constant.BRICK_WIDTH) / 2; //khoang cach tu mep
+        double offsetY = 60;
+
+        for (int row = 0; row < Constant.BRICK_ROWS; row++) {
+            for (int col = 0; col < Constant.BRICK_COLUMNS; col++) {
+                double x = offsetX + col * Constant.BRICK_WIDTH; // vi tri cua tung vien gach
+                double y = offsetY + row * Constant.BRICK_HEIGHT;
+                Brick brick;
+
+                if (row == 0) {
+                    brick = new StrongBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT, 2);
+                } else if (row == 1) {
+                    brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
+                } else if (row == 2) {
+                    // brick = new BonusBrick(x,y,Constant.BRICK_WIDTH,Constant.BRICK_HEIGHT, 1);
+                    brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
+
+                } else if (row == 3) {
+                    brick = new UnbreakableBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
+                } else {
+                    brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
+                }
+                bricks.add(brick);
+            }
+        }
+    }
+
+    /**
+     * khoi tao vi tri cac obj
+     */
     public void start() {
-        paddle = new Paddle(width / 2 - 50, height - 30, 100, 15, 8);
-        ball = new Ball(width / 2 - 6, height / 2, 12, 4, 1, -1);
+        paddle = new Paddle(width / 2 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
+        double ballX = (width / 2) - (Constant.BALL_RADIUS / 2);
+        double ballY = height - 30 - Constant.PADDLE_HEIGHT - Constant.BALL_RADIUS - 2;
+        ball = new Ball(ballX, ballY, Constant.BALL_RADIUS, Constant.BALL_SPEED, 1, -1);
         bricks = new ArrayList<>();
         powerUps = new ArrayList<>();
         score = 0;
         lives = 3;
         state = "RUNNING";
-        //initBricks();
+
+        // khoi tao bricks
+        initBricks();
     }
 
-    /*private void initBricks() {
-      TO DO hoan thanh luoi gach
-    }*/
     public void handleInput(String command) {
+        //Vì nếu state chưa được gán (null),
+        //thì state.equals("RUNNING") ❌ sẽ gây lỗi NullPointerException.
         if ("LEFT".equals(command)) paddle.moveLeft(width);
         if ("RIGHT".equals(command)) paddle.moveRight(width);
+
+        if("SPACE".equals(command) && !ballLaunched) launchedBall();
+    }
+
+    private void launchedBall(){
+        ballLaunched = true;
+
+        java.util.Random rand = new java.util.Random();
+        //random hướng ngang: -0.8 -> + 0.8 tránh bay thẳng đứng
+        double dirX= (rand.nextDouble() * 1.6 - 0.8);
+
+        //copy sign se giu nguyen dau cua dirX Vidu : (0.3, -0.05) -> -0.3
+        if(Math.abs(dirX) < 0.3) dirX = Math.copySign(0.3, dirX);
+
+        ball.setDx(dirX);
+        ball.setDirectionY(-1);
+    }
+
+    public void update(){
+        if (!"RUNNING".equals(state)) {return ;}
+
+        if(!ballLaunched){
+            // giu bong nam tren paddle
+            ball.setX(paddle.getX() + paddle.getWidth()/2 - ball.getWidth()/2);
+            ball.setY(paddle.getY() - paddle.getHeight()/2 -2);
+        } else {
+            ball.update();
+
+            if(ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT){
+                resetBall();
+            }
+        }
+        if(lives <= 0){
+            gameOver();
+        }
     }
 
     private void resetBall() {
-        ball.setX(width / 2 - 6);
-        ball.setY(height / 2);
+        ballLaunched = false;
+        ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
+        ball.setY(paddle.getY() - ball.getHeight() - 2);
         ball.setDirectionY(-1);
+        lives -=1;
     }
 
     private void gameOver() {
         state = "GAME_OVER";
         System.out.println("Game Over! Final Score: " + score);
+
     }
 
     public Paddle getPaddle() {

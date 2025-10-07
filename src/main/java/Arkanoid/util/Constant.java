@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
  * Chứa các hằng số dùng chung trong toàn bộ game Arkanoid.
  * Giúp tránh "magic numbers" và dễ thay đổi cấu hình.
  */
-public class Constant {
+public class    Constant {
 
     // 💻 Kích thước màn hình
     public static final int SCREEN_WIDTH = 800;
