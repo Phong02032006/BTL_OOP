@@ -30,9 +30,20 @@ public class Main extends Application {
         Scene scene = new Scene(new StackPane(canvas), width, height);
 
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.LEFT) gm.handleInput("LEFT");
-            if (event.getCode() == KeyCode.RIGHT) gm.handleInput("RIGHT");
-            if(event.getCode() == KeyCode.SPACE) gm.handleInput("SPACE");
+            KeyCode code = event.getCode();
+            switch (code) {
+                case LEFT -> gm.onKeyPressed("LEFT");
+                case RIGHT -> gm.onKeyPressed("RIGHT");
+                case SPACE -> gm.onKeyPressed("SPACE");
+            }
+        });
+
+        scene.setOnKeyReleased(event -> {
+            KeyCode code = event.getCode();
+            switch (code) {
+                case LEFT -> gm.onKeyReleased("LEFT");
+                case RIGHT -> gm.onKeyReleased("RIGHT");
+            }
         });
 
         new AnimationTimer() {

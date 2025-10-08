@@ -86,13 +86,25 @@ public class GameManager {
         initBricks();
     }
 
-    public void handleInput(String command) {
-        //Vì nếu state chưa được gán (null),
-        //thì state.equals("RUNNING") ❌ sẽ gây lỗi NullPointerException.
-        if ("LEFT".equals(command)) paddle.moveLeft(width);
-        if ("RIGHT".equals(command)) paddle.moveRight(width);
+    private boolean movingLeft = false;
+    private boolean movingRight = false;
 
-        if("SPACE".equals(command) && !ballLaunched) launchedBall();
+    // Nhận input
+    public void onKeyPressed(String key) {
+        switch (key) {
+            case "LEFT" -> movingLeft = true;
+            case "RIGHT" -> movingRight = true;
+            case "SPACE" -> {
+                if (!ballLaunched) launchedBall();
+            }
+        }
+    }
+
+    public void onKeyReleased(String key) {
+        switch (key) {
+            case "LEFT" -> movingLeft = false;
+            case "RIGHT" -> movingRight = false;
+        }
     }
 
     private void launchedBall(){
@@ -109,23 +121,21 @@ public class GameManager {
         ball.setDirectionY(-1);
     }
 
-    public void update(){
-        if (!"RUNNING".equals(state)) {return ;}
+    public void update() {
+        if (!"RUNNING".equals(state)) return;
 
-        if(!ballLaunched){
-            // giu bong nam tren paddle
+        if (movingLeft)  paddle.moveLeft(width);
+        if (movingRight) paddle.moveRight(width);
+
+        if (!ballLaunched) {
             ball.setX(paddle.getX() + paddle.getWidth()/2 - ball.getWidth()/2);
-            ball.setY(paddle.getY() - paddle.getHeight()/2 -2);
+            ball.setY(paddle.getY() - paddle.getHeight()/2 - 2);
         } else {
             ball.update();
+            if (ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT) resetBall();
+        }
 
-            if(ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT){
-                resetBall();
-            }
-        }
-        if(lives <= 0){
-            gameOver();
-        }
+        if (lives <= 0) gameOver();
     }
 
     private void resetBall() {
