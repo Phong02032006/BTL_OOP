@@ -4,8 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class UnbreakableBrick extends Brick {
-    public UnbreakableBrick(int x, int y, int width, int height) {
-        super(x,y,width, height, -1,"Unbreakable");
+    public UnbreakableBrick(double x, double y, double width, double height) {
+        super(x,y,width, height, -1);
     }
     @Override
     public void render(GraphicsContext gc){
@@ -13,7 +13,7 @@ public class UnbreakableBrick extends Brick {
         gc.fillRect(x,y,width,height);
 
         gc.setStroke(Color.BLACK);
-        gc.strokeLine(x+0.5, y+0.5, width-1, height -1 );
+        gc.strokeRect(x+0.5, y+0.5, width-1, height -1 );
     }
 
     @Override

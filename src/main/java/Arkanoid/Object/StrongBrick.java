@@ -4,7 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 public class StrongBrick extends Brick {
     public StrongBrick(double x, double y , double width, double height,int hp){
-        super(x,y,width,height,Math.max(2,hp),"Strong");
+        super(x,y,width,height,Math.max(2,hp));
     }
 
     @Override
@@ -16,11 +16,11 @@ public class StrongBrick extends Brick {
         gc.fillRect(x,y,width,height);
 
         gc.setStroke(Color.BLACK);
-        gc.strokeLine(x+0.5, y+0.5, width-1, height -1 );
+        gc.strokeRect(x+0.5, y+0.5, width-1, height -1 );
 
         // debug hitPoints (xoa khi nop)
         gc.setFill(Color.BLACK);
-        gc.fillText("1", x + width / 2 - 3, y + height / 2 + 4);
+        gc.fillText(String.valueOf(hitPoints), x + width / 2 - 3, y + height / 2 + 4);
     }
 
 }
