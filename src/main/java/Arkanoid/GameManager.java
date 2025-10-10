@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
 import Arkanoid.util.Constant;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -24,6 +25,7 @@ public class GameManager {
         return instance;
     }
 
+    private Background background;
     private Paddle paddle;
     private Ball ball;
     private List<Brick> bricks;
@@ -87,6 +89,7 @@ public class GameManager {
      * khoi tao vi tri cac obj
      */
     public void start() {
+        background = new Background("/images/background.png");
         paddle = new Paddle(width / 2 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
         double ballX = (width / 2) - (Constant.BALL_RADIUS / 2);
         double ballY = height - 30 - Constant.PADDLE_HEIGHT - Constant.BALL_RADIUS - 2;
@@ -232,6 +235,10 @@ public class GameManager {
         state = "GAME_OVER";
         System.out.println("Game Over! Final Score: " + score);
 
+    }
+
+    public Background getBackground() {
+        return background;
     }
 
     public Paddle getPaddle() {

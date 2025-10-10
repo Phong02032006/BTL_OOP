@@ -26,6 +26,8 @@ public class Renderer {
         }
     }
 
+
+
     public void drawList(List<? extends GameObject> list) {
         if (list == null) return;
         for (GameObject obj : list) {
@@ -44,6 +46,7 @@ public class Renderer {
 
     public void renderAll(GameManager game, double width, double height) {
         clear(width, height);
+        game.getBackground().render(gc, width, height);
         draw(game.getPaddle());
         draw(game.getBall());
         drawList(game.getBricks());

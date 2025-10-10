@@ -13,7 +13,7 @@ public abstract class Brick extends GameObject {
         super(x, y, width, height);
         this.hitPoints = hitPoints;
         if (spritePath != null) {
-            this.image = SpriteManager.getImage(spritePath); // 👈 load sprite tại đây
+            this.image = SpriteManager.getImage(spritePath);
         }
     }
 
@@ -49,9 +49,7 @@ public abstract class Brick extends GameObject {
 
     @Override
     public void update() { /* gạch tĩnh, để trống */ }
-    /**
-     * Mỗi loại gạch tự vẽ
-     */
+
     @Override
     public void render(GraphicsContext gc) {
         if (image != null) {

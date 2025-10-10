@@ -12,7 +12,7 @@ public class Ball extends MovableObject {
     public Ball(double x, double y, double radius, double speed, int dx, int dy) {
         super(x, y, radius, radius, dx, dy);
         this.speed = speed;
-        this.image = SpriteManager.getImage("/images/ball_yellow.bmp");
+        this.image = SpriteManager.getImage("/images/ball.png");
     }
     /*
      * Kiểm tra va chạm giữa hình tròn (ball) và hình chữ nhật (brick/paddle)
@@ -86,7 +86,7 @@ public class Ball extends MovableObject {
             x=0 + width;
             dx= -dx;
         }
-        if(x+ width>=800){
+        if(x+ width >= Constant.SCREEN_WIDTH){
             x=800 - width;
             dx = -dx;
         }
@@ -107,9 +107,10 @@ public class Ball extends MovableObject {
     public void render(GraphicsContext gc) {
         if (image != null) {
             gc.drawImage(image, x, y, width, height);
+        }else{
+            gc.setFill(Color.YELLOW);
+            gc.fillOval(x, y, width, height);
         }
-        gc.setFill(Color.YELLOW);
-        gc.fillOval(x, y, width, height);
     }
 
     public double getSpeed() { return speed; }

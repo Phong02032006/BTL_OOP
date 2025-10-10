@@ -14,8 +14,9 @@ public class FastBallPowerUp extends PowerUp {
         super(x, y,
                 Constant.POWERUP_SIZE,
                 Constant.POWERUP_SIZE,
-                "FastBall",
-                Constant.POWERUP_DURATION);
+                "ExpandPaddle",
+                Constant.POWERUP_DURATION,
+                "/images/fast.png");
         this.color = Constant.POWERUP_FAST_COLOR; //  Màu riêng
     }
 
@@ -42,9 +43,4 @@ public class FastBallPowerUp extends PowerUp {
         setActive(false);
     }
 
-    @Override
-    public void render(GraphicsContext gc) {
-        gc.setFill(color);
-        gc.fillOval(x, y, width, height);
-    }
 }

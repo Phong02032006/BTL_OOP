@@ -13,22 +13,22 @@ public class    Constant {
     public static final int SCREEN_HEIGHT = 600;
 
     // ⚙️ Paddle
-    public static final double PADDLE_WIDTH = 100;
-    public static final double PADDLE_HEIGHT = 15;
+    public static final double PADDLE_WIDTH = 128;
+    public static final double PADDLE_HEIGHT = 28;
     public static final double PADDLE_SPEED = 6;
 
     // 🟡 Ball
-    public static final double BALL_RADIUS = 10;
+    public static final double BALL_RADIUS = 20;
     public static final double BALL_SPEED = 3;
 
     // 🧱 Brick
-    public static final double BRICK_WIDTH = 60;
-    public static final double BRICK_HEIGHT = 20;
-    public static final int BRICK_ROWS = 5;
-    public static final int BRICK_COLUMNS = 10;
+    public static final double BRICK_WIDTH = 64;
+    public static final double BRICK_HEIGHT = 32;
+    public static final int BRICK_ROWS = 8;
+    public static final int BRICK_COLUMNS = 8;
 
     // ⏳ PowerUp
-    public static final double POWERUP_SIZE = 20;
+    public static final double POWERUP_SIZE = 15;
     public static final double POWERUP_SPEED = 1;
     public static final double POWERUP_DURATION = 2000;
     public static final Color POWERUP_EXPAND_COLOR = Color.LIMEGREEN;
