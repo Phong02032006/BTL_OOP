@@ -15,7 +15,7 @@ public class Paddle extends MovableObject {
         super(x, y, width, height, 0, 0);
         this.speed = speed;
         this.color = Constant.PADDLE_COLOR;
-        this.image = SpriteManager.getImage("/images/paddle_blue.bmp");// màu mặc định từ Constants
+        this.image = SpriteManager.getImage("/images/paddle.png");
     }
 
     /*
