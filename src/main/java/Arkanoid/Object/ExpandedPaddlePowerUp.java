@@ -23,7 +23,8 @@ public class ExpandedPaddlePowerUp extends PowerUp {
     @Override
     public void applyEffect(Paddle paddle, Ball ball) {
         originalWidth = paddle.getWidth();
-        paddle.setWidth(originalWidth * 1.5);
+        paddle.setWidth(originalWidth * 1.2);
+        startTime = System.currentTimeMillis();
         setActive(true);
     }
 

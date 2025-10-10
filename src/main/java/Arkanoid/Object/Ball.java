@@ -2,13 +2,17 @@ package Arkanoid.Object;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import Arkanoid.util.*;
+import javafx.scene.image.Image;
 
 public class Ball extends MovableObject {
     private double speed;
+    private final Image image;
 
     public Ball(double x, double y, double radius, double speed, int dx, int dy) {
         super(x, y, radius, radius, dx, dy);
         this.speed = speed;
+        this.image = SpriteManager.getImage("/images/ball_yellow.bmp");
     }
     /*
      * Kiểm tra va chạm giữa hình tròn (ball) và hình chữ nhật (brick/paddle)
@@ -33,23 +37,42 @@ public class Ball extends MovableObject {
     }
 
     public void bounceOff(GameObject other) {
-        // Tìm tâm của bóng
         double ballCenterX = x + width / 2;
         double ballCenterY = y + height / 2;
-
-        // Tìm tâm của đối tượng
         double otherCenterX = other.x + other.width / 2;
         double otherCenterY = other.y + other.height / 2;
 
-        // Xác định va chạm từ phía nào
         double deltaX = ballCenterX - otherCenterX;
         double deltaY = ballCenterY - otherCenterY;
 
-        // Nếu va chạm nhiều hơn từ trên/dưới thì đảo dy, ngược lại đảo dx
-        if (Math.abs(deltaY) > Math.abs(deltaX)) {
-            dy = -dy;
-        } else {
-            dx = -dx;
+        if (other instanceof Paddle) {
+            // 1. Đưa bóng ra khỏi paddle
+            y = other.y - height;
+
+            // 2. offset [-1, 1]
+            double offset = (ballCenterX - otherCenterX) / (other.width / 2);
+            offset = Math.max(-1, Math.min(1, offset));
+
+            // 3. Giới hạn góc lệch
+            double maxAngle = Math.toRadians(60); // max lệch 60°
+            double angle = offset * maxAngle;
+
+            // 4. Tính dx, dy từ góc
+            dx = Math.sin(angle);
+            dy = -Math.cos(angle);
+
+            // 5. Bảo toàn vận tốc
+            double speedLength = speed;
+            x += dx * 0.1; // đẩy nhẹ ra khỏi paddle để tránh dính
+            y += dy * 0.1;
+        }
+        else {
+            // brick / tường
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                dy = -dy;
+            } else {
+                dx = -dx;
+            }
         }
     }
 
@@ -82,6 +105,9 @@ public class Ball extends MovableObject {
 
     @Override
     public void render(GraphicsContext gc) {
+        if (image != null) {
+            gc.drawImage(image, x, y, width, height);
+        }
         gc.setFill(Color.YELLOW);
         gc.fillOval(x, y, width, height);
     }

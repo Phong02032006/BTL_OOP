@@ -16,13 +16,12 @@ public class FastBallPowerUp extends PowerUp {
                 Constant.POWERUP_SIZE,
                 "FastBall",
                 Constant.POWERUP_DURATION);
-        this.color = Constant.POWERUP_FAST_COLOR; // 🎨 Màu riêng
+        this.color = Constant.POWERUP_FAST_COLOR; //  Màu riêng
     }
 
     @Override
     public void update() {
-
-        y += Constant.POWERUP_SPEED;
+        y += Constant.POWERUP_SPEED;  // powerup rơi xuống
     }
 
     @Override
@@ -31,13 +30,14 @@ public class FastBallPowerUp extends PowerUp {
             originalSpeed = ball.getSpeed();
             ball.setSpeed(originalSpeed * 1.5); // tăng tốc 50%
         }
+        startTime = System.currentTimeMillis(); // Bắt đầu tính thời gian hiệu lực
         setActive(true);
     }
 
     @Override
     public void removeEffect(Paddle paddle, Ball ball) {
         if (ball != null) {
-            ball.setSpeed(originalSpeed);
+            ball.setSpeed(originalSpeed);  //  Trả lại tốc độ ban đầu
         }
         setActive(false);
     }

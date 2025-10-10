@@ -3,6 +3,7 @@ package Arkanoid;
 import Arkanoid.Object.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import Arkanoid.util.Constant;
@@ -27,6 +28,7 @@ public class GameManager {
     private Ball ball;
     private List<Brick> bricks;
     private List<PowerUp> powerUps;
+    private List<PowerUp> activePowerUps;
 
     private int score;
     private int lives;
@@ -64,6 +66,19 @@ public class GameManager {
                     brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
                 }
                 bricks.add(brick);
+                if (Math.random() < 0.2) { // 20% viên gạch có powerup
+                    double px = x + Constant.BRICK_WIDTH / 2 - 10; // đặt powerup giữa viên gạch
+                    double py = y + Constant.BRICK_HEIGHT / 2 - 10;
+
+                    PowerUp powerUp;
+                    if (Math.random() < 0.5) {
+                        powerUp = new ExpandedPaddlePowerUp(px, py);
+                    } else {
+                        powerUp = new FastBallPowerUp(px, py);
+                    }
+
+                    brick.setPowerUp(powerUp);
+                }
             }
         }
     }
@@ -78,6 +93,7 @@ public class GameManager {
         ball = new Ball(ballX, ballY, Constant.BALL_RADIUS, Constant.BALL_SPEED, 1, -1);
         bricks = new ArrayList<>();
         powerUps = new ArrayList<>();
+        activePowerUps = new ArrayList<>();
         score = 0;
         lives = 3;
         state = "RUNNING";
@@ -152,18 +168,53 @@ public class GameManager {
             for (int i = bricks.size() - 1; i >= 0; i--) {
                 Brick brick = bricks.get(i);
                 if (ball.checkCollision(brick)) {
+                    // 1) Phản xạ bóng trước
                     ball.bounceOff(brick);
-                    brick.takeHit();
 
-                    if (brick.isDestroyed()) {
+                    // 2) Trừ máu gạch, nhận biết có bị phá không
+                    boolean destroyed = brick.takeHit();
+
+                    // 3) Nếu gạch vỡ: spawn powerup (nếu có), remove, cộng điểm
+                    if (destroyed) {
+                        if (brick.hasPowerUp()) {
+                            powerUps.add(brick.getPowerUp());
+                        }
                         bricks.remove(i);
-                        score += 10; // Cộng điểm khi phá gạch
+                        score += 10;
                     }
-                    break; // Chỉ xử lý va chạm với 1 gạch mỗi frame
+
+                    // 4) Xử lý xong 1 viên trong frame này
+                    break;
                 }
             }
 
             if (ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT) resetBall();
+        }
+        for (int i = powerUps.size() - 1; i >= 0; i--) {
+            PowerUp pu = powerUps.get(i);
+            pu.update();
+
+            boolean removed = false;
+
+            if (pu.getY() > Constant.SCREEN_HEIGHT) {
+                powerUps.remove(i);
+                removed = true;
+            }
+
+            if (!removed && pu.checkCollision(paddle)) {
+                pu.applyEffect(paddle, ball);
+                activePowerUps.add(pu);
+                powerUps.remove(i);
+            }
+        }
+
+        Iterator<PowerUp> activeIterator = activePowerUps.iterator();
+        while (activeIterator.hasNext()) {
+            PowerUp activePU = activeIterator.next();
+            if (activePU.isExpired()) {
+                activePU.removeEffect(paddle, ball);
+                activeIterator.remove();
+            }
         }
 
         if (lives <= 0) gameOver();
