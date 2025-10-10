@@ -15,11 +15,11 @@ public class    Constant {
     // ⚙️ Paddle
     public static final double PADDLE_WIDTH = 100;
     public static final double PADDLE_HEIGHT = 15;
-    public static final double PADDLE_SPEED = 8;
+    public static final double PADDLE_SPEED = 6;
 
     // 🟡 Ball
     public static final double BALL_RADIUS = 10;
-    public static final double BALL_SPEED = 6;
+    public static final double BALL_SPEED = 3;
 
     // 🧱 Brick
     public static final double BRICK_WIDTH = 60;
@@ -29,8 +29,8 @@ public class    Constant {
 
     // ⏳ PowerUp
     public static final double POWERUP_SIZE = 20;
-    public static final double POWERUP_SPEED = 2;
-    public static final double POWERUP_DURATION = 5000;
+    public static final double POWERUP_SPEED = 1;
+    public static final double POWERUP_DURATION = 2000;
     public static final Color POWERUP_EXPAND_COLOR = Color.LIMEGREEN;
     public static final Color POWERUP_FAST_COLOR = Color.MEDIUMPURPLE;
     // 5s

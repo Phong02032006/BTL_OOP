@@ -1,18 +1,21 @@
 package Arkanoid.Object;
 
-import Arkanoid.util.Constant;
+import Arkanoid.util.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class Paddle extends MovableObject {
     private double speed;
     private PowerUp currentPowerUp;
-    private Color color; // 🎨 thêm thuộc tính màu paddle (dùng từ Constants)
+    private Color color;
+    private final Image image;
 
     public Paddle(double x, double y, double width, double height, double speed) {
         super(x, y, width, height, 0, 0);
         this.speed = speed;
-        this.color = Constant.PADDLE_COLOR; // màu mặc định từ Constants
+        this.color = Constant.PADDLE_COLOR;
+        this.image = SpriteManager.getImage("/images/paddle_blue.bmp");// màu mặc định từ Constants
     }
 
     /*
@@ -58,8 +61,13 @@ public class Paddle extends MovableObject {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(color);
-        gc.fillRect(x, y, width, height);
+        if (image != null) {
+            gc.drawImage(image, x, y, width, height);
+        } else {
+            // fallback khi ảnh chưa load (hoặc lỗi)
+            gc.setFill(color);
+            gc.fillRect(x, y, width, height);
+        }
     }
 
     //  Getter / Setter bổ sung
