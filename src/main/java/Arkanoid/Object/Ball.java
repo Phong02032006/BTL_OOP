@@ -11,18 +11,46 @@ public class Ball extends MovableObject {
         this.speed = speed;
     }
     /*
-    - check conllision phai sua lai de tro thanh check su va cham giua hinh tron va hinh chu nhat.
-    - ham check collision hien tai chi check va cham giua 2 hinh chu nhat thoi nen neu chay se xay ra loi.
+     * Kiểm tra va chạm giữa hình tròn (ball) và hình chữ nhật (brick/paddle)
      */
     public boolean checkCollision(GameObject other) {
-        return (x < other.x + other.width &&    // mép trái bóng < mép phải đối tượng
-                x + width > other.x &&          // mép phải bóng > mép trái đối tượng
-                y < other.y + other.height &&   // mép trên bóng < mép dưới đối tượng
-                y + height > other.y);          // mép dưới bóng > mép trên đối tượng
+        // Tìm tâm của bóng (hình tròn)
+        double ballCenterX = x + width / 2;
+        double ballCenterY = y + height / 2;
+        double radius = width / 2;
+
+        // Tìm điểm gần nhất trên hình chữ nhật so với tâm bóng
+        double closestX = Math.max(other.x, Math.min(ballCenterX, other.x + other.width));
+        double closestY = Math.max(other.y, Math.min(ballCenterY, other.y + other.height));
+
+        // Tính khoảng cách từ điểm gần nhất đến tâm bóng
+        double distanceX = ballCenterX - closestX;
+        double distanceY = ballCenterY - closestY;
+        double distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+
+        // Va chạm nếu khoảng cách <= bán kính
+        return distanceSquared <= (radius * radius);
     }
 
     public void bounceOff(GameObject other) {
-        dy = -dy;
+        // Tìm tâm của bóng
+        double ballCenterX = x + width / 2;
+        double ballCenterY = y + height / 2;
+
+        // Tìm tâm của đối tượng
+        double otherCenterX = other.x + other.width / 2;
+        double otherCenterY = other.y + other.height / 2;
+
+        // Xác định va chạm từ phía nào
+        double deltaX = ballCenterX - otherCenterX;
+        double deltaY = ballCenterY - otherCenterY;
+
+        // Nếu va chạm nhiều hơn từ trên/dưới thì đảo dy, ngược lại đảo dx
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+            dy = -dy;
+        } else {
+            dx = -dx;
+        }
     }
 
     @Override

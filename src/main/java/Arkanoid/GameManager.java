@@ -92,18 +92,26 @@ public class GameManager {
     // Nhận input
     public void onKeyPressed(String key) {
         switch (key) {
-            case "LEFT" -> movingLeft = true;
-            case "RIGHT" -> movingRight = true;
-            case "SPACE" -> {
+            case "LEFT":
+                movingLeft = true;
+                break;
+            case "RIGHT":
+                movingRight = true;
+                break;
+            case "SPACE":
                 if (!ballLaunched) launchedBall();
-            }
+                break;
         }
     }
 
     public void onKeyReleased(String key) {
         switch (key) {
-            case "LEFT" -> movingLeft = false;
-            case "RIGHT" -> movingRight = false;
+            case "LEFT":
+                movingLeft = false;
+                break;
+            case "RIGHT":
+                movingRight = false;
+                break;
         }
     }
 
@@ -132,6 +140,29 @@ public class GameManager {
             ball.setY(paddle.getY() - paddle.getHeight()/2 - 2);
         } else {
             ball.update();
+
+            // Kiểm tra va chạm với paddle (chỉ khi bóng đang rơi xuống)
+            if (ball.checkCollision(paddle) && ball.getDy() > 0) {
+                ball.bounceOff(paddle);
+                // Đảm bảo bóng không bị dính vào paddle
+                ball.setY(paddle.getY() - ball.getHeight() - 1);
+            }
+
+            // Kiểm tra va chạm với các viên gạch
+            for (int i = bricks.size() - 1; i >= 0; i--) {
+                Brick brick = bricks.get(i);
+                if (ball.checkCollision(brick)) {
+                    ball.bounceOff(brick);
+                    brick.takeHit();
+
+                    if (brick.isDestroyed()) {
+                        bricks.remove(i);
+                        score += 10; // Cộng điểm khi phá gạch
+                    }
+                    break; // Chỉ xử lý va chạm với 1 gạch mỗi frame
+                }
+            }
+
             if (ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT) resetBall();
         }
 
