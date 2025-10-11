@@ -11,55 +11,53 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-/**
- * Main class đơn giản - chỉ có menu system, không tích hợp high score vào game flow
- */
-public class SimpleMain extends Application {
+public class Main extends Application {
     private Scene scene;
     private StackPane root;
     private Canvas canvas;
     private GraphicsContext gc;
-    
+
     private GameManager gm;
     private Renderer renderer;
     private AnimationTimer gameLoop;
-    
+
     // UI Screens
     private SimpleMenuScreen menuScreen;
     private SimplePauseMenu pauseMenu;
     private SimpleGameOverScreen gameOverScreen;
-    
+
     private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER
-    
+
     @Override
     public void start(Stage stage) {
         final int width = Constant.SCREEN_WIDTH;
         final int height = Constant.SCREEN_HEIGHT;
-        
+
         // Tạo root container
         root = new StackPane();
-        
+
         // Tạo canvas và graphics context
         canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
-        
+
         // Tạo game manager và renderer
         gm = GameManager.getInstance();
         renderer = new Renderer(gc);
-        
+
         // Khởi tạo các màn hình
         initScreens();
-        
+
         // Tạo scene
         scene = new Scene(root, width, height);
-        
+
         // Xử lý phím
         scene.setOnKeyPressed(event -> handleKeyPressed(event.getCode()));
         scene.setOnKeyReleased(event -> handleKeyReleased(event.getCode()));
-        
+
         // Tạo game loop
         gameLoop = new AnimationTimer() {
             @Override
@@ -74,45 +72,45 @@ public class SimpleMain extends Application {
             }
         };
         gameLoop.start();
-        
+
         // Hiển thị menu ban đầu
         showMenuScreen();
-        
+
         stage.setTitle("Arkanoid");
         stage.setScene(scene);
         stage.setResizable(false);
-        stage.setOnCloseRequest(e -> {
+        stage.setOnCloseRequest(event -> {
             gameLoop.stop();
             Platform.exit();
         });
         stage.show();
     }
-    
+
     /**
      * Khởi tạo tất cả các màn hình UI
      */
     private void initScreens() {
-        // Menu Screen (đơn giản)
+        // Menu Screen
         menuScreen = new SimpleMenuScreen();
         menuScreen.setOnStart(() -> startGame());
         menuScreen.setOnHighScores(() -> {
-            // Không có chức năng high score trong phiên bản simple
+            // Không có chức năng high score trong phiên bản đơn giản
             System.out.println("High Score feature not available in simple version");
         });
         menuScreen.setOnExit(() -> Platform.exit());
-        
+
         // Pause Menu
         pauseMenu = new SimplePauseMenu();
         pauseMenu.setOnResume(() -> resumeGame());
         pauseMenu.setOnRestart(() -> restartGame());
         pauseMenu.setOnMainMenu(() -> returnToMenu());
-        
-        // Game Over Screen (đơn giản - không có high score)
+
+        // Game Over Screen
         gameOverScreen = new SimpleGameOverScreen();
         gameOverScreen.setOnRestart(() -> restartGame());
         gameOverScreen.setOnMainMenu(() -> returnToMenu());
     }
-    
+
     /**
      * Xử lý phím nhấn
      */
@@ -141,7 +139,7 @@ public class SimpleMain extends Application {
             }
         }
     }
-    
+
     /**
      * Xử lý phím thả
      */
@@ -157,7 +155,7 @@ public class SimpleMain extends Application {
             }
         }
     }
-    
+
     /**
      * Hiển thị màn hình menu chính
      */
@@ -166,7 +164,7 @@ public class SimpleMain extends Application {
         root.getChildren().clear();
         root.getChildren().add(menuScreen);
     }
-    
+
     /**
      * Bắt đầu game mới
      */
@@ -177,7 +175,7 @@ public class SimpleMain extends Application {
         root.getChildren().add(canvas);
         canvas.requestFocus();
     }
-    
+
     /**
      * Tạm dừng game
      */
@@ -188,7 +186,7 @@ public class SimpleMain extends Application {
             root.getChildren().add(pauseMenu); // Overlay trên canvas
         }
     }
-    
+
     /**
      * Tiếp tục game
      */
@@ -200,7 +198,7 @@ public class SimpleMain extends Application {
             canvas.requestFocus();
         }
     }
-    
+
     /**
      * Chơi lại game
      */
@@ -211,7 +209,7 @@ public class SimpleMain extends Application {
         root.getChildren().add(canvas);
         canvas.requestFocus();
     }
-    
+
     /**
      * Quay về menu chính
      */
@@ -219,7 +217,7 @@ public class SimpleMain extends Application {
         gm.returnToMenu();
         showMenuScreen();
     }
-    
+
     /**
      * Hiển thị màn hình game over
      */
@@ -229,10 +227,9 @@ public class SimpleMain extends Application {
         root.getChildren().clear();
         root.getChildren().add(gameOverScreen);
     }
-    
-    
+
+
     public static void main(String[] args) {
         launch(args);
     }
 }
-
