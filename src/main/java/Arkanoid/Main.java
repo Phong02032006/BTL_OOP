@@ -1,9 +1,8 @@
 package Arkanoid;
 
 import Arkanoid.UI.SimpleGameOverScreen;
-import Arkanoid.UI.RetroHighScoreScreen;
 import Arkanoid.UI.SimpleMenuScreen;
-import Arkanoid.UI.RetroPauseMenu;
+import Arkanoid.UI.SimplePauseMenu;
 import Arkanoid.util.Constant;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -30,11 +29,10 @@ public class SimpleMain extends Application {
     
     // UI Screens
     private SimpleMenuScreen menuScreen;
-    private RetroPauseMenu pauseMenu;
+    private SimplePauseMenu pauseMenu;
     private SimpleGameOverScreen gameOverScreen;
-    private RetroHighScoreScreen highScoreScreen;
     
-    private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER, HIGHSCORE
+    private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER
     
     @Override
     public void start(Stage stage) {
@@ -97,11 +95,14 @@ public class SimpleMain extends Application {
         // Menu Screen (đơn giản)
         menuScreen = new SimpleMenuScreen();
         menuScreen.setOnStart(() -> startGame());
-        menuScreen.setOnHighScores(() -> showHighScoreScreen());
+        menuScreen.setOnHighScores(() -> {
+            // Không có chức năng high score trong phiên bản simple
+            System.out.println("High Score feature not available in simple version");
+        });
         menuScreen.setOnExit(() -> Platform.exit());
         
         // Pause Menu
-        pauseMenu = new RetroPauseMenu();
+        pauseMenu = new SimplePauseMenu();
         pauseMenu.setOnResume(() -> resumeGame());
         pauseMenu.setOnRestart(() -> restartGame());
         pauseMenu.setOnMainMenu(() -> returnToMenu());
@@ -110,10 +111,6 @@ public class SimpleMain extends Application {
         gameOverScreen = new SimpleGameOverScreen();
         gameOverScreen.setOnRestart(() -> restartGame());
         gameOverScreen.setOnMainMenu(() -> returnToMenu());
-        
-        // High Score Screen (độc lập - chỉ xem được từ menu)
-        highScoreScreen = new RetroHighScoreScreen();
-        highScoreScreen.setOnBack(() -> showMenuScreen());
     }
     
     /**
@@ -233,15 +230,6 @@ public class SimpleMain extends Application {
         root.getChildren().add(gameOverScreen);
     }
     
-    /**
-     * Hiển thị màn hình bảng xếp hạng
-     */
-    private void showHighScoreScreen() {
-        currentScreen = "HIGHSCORE";
-        highScoreScreen.loadScores(); // Refresh scores
-        root.getChildren().clear();
-        root.getChildren().add(highScoreScreen);
-    }
     
     public static void main(String[] args) {
         launch(args);
