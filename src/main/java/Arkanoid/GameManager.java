@@ -18,11 +18,22 @@ public class GameManager {
     private static GameManager instance;
     private boolean ballLaunched;
 
+    private GameManager() {
+        // Private constructor để đảm bảo Singleton pattern
+    }
+
     public static GameManager getInstance() {
         if (instance == null) {
             instance = new GameManager();
         }
         return instance;
+    }
+    
+    /**
+     * Reset singleton instance (chỉ dùng khi cần thiết)
+     */
+    public static void resetInstance() {
+        instance = null;
     }
 
     private Background background;
@@ -35,6 +46,12 @@ public class GameManager {
     private int score;
     private int lives;
     private String state;
+    
+    // Game states
+    public static final String STATE_MENU = "MENU";
+    public static final String STATE_RUNNING = "RUNNING";
+    public static final String STATE_PAUSED = "PAUSED";
+    public static final String STATE_GAME_OVER = "GAME_OVER";
 
     private static final int width = Constant.SCREEN_WIDTH;
     private static final int height = Constant.SCREEN_HEIGHT;
@@ -99,10 +116,18 @@ public class GameManager {
         activePowerUps = new ArrayList<>();
         score = 0;
         lives = 3;
-        state = "RUNNING";
+        state = STATE_RUNNING;
+        ballLaunched = false;
 
         // khoi tao bricks
         initBricks();
+    }
+    
+    /**
+     * Reset game để chơi lại
+     */
+    public void restart() {
+        start();
     }
 
     private boolean movingLeft = false;
@@ -149,7 +174,7 @@ public class GameManager {
     }
 
     public void update() {
-        if (!"RUNNING".equals(state)) return;
+        if (!STATE_RUNNING.equals(state)) return;
 
         if (movingLeft)  paddle.moveLeft(width);
         if (movingRight) paddle.moveRight(width);
@@ -221,6 +246,7 @@ public class GameManager {
         }
 
         if (lives <= 0) gameOver();
+        checkLevelComplete();
     }
 
     private void resetBall() {
@@ -232,9 +258,66 @@ public class GameManager {
     }
 
     private void gameOver() {
-        state = "GAME_OVER";
+        state = STATE_GAME_OVER;
         System.out.println("Game Over! Final Score: " + score);
-
+    }
+    
+    /**
+     * Tạm dừng game
+     */
+    public void pause() {
+        if (STATE_RUNNING.equals(state)) {
+            state = STATE_PAUSED;
+        }
+    }
+    
+    /**
+     * Tiếp tục game sau khi tạm dừng
+     */
+    public void resume() {
+        if (STATE_PAUSED.equals(state)) {
+            state = STATE_RUNNING;
+        }
+    }
+    
+    /**
+     * Toggle pause/resume
+     */
+    public void togglePause() {
+        if (STATE_RUNNING.equals(state)) {
+            pause();
+        } else if (STATE_PAUSED.equals(state)) {
+            resume();
+        }
+    }
+    
+    /**
+     * Chuyển về menu
+     */
+    public void returnToMenu() {
+        state = STATE_MENU;
+    }
+    
+    /**
+     * Kiểm tra xem có còn gạch để phá không
+     */
+    public boolean hasRemainingBricks() {
+        for (Brick brick : bricks) {
+            if (!brick.isUnbreakable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Kiểm tra thắng cấp độ
+     */
+    private void checkLevelComplete() {
+        if (!hasRemainingBricks()) {
+            state = STATE_GAME_OVER; // Có thể mở rộng thành STATE_LEVEL_COMPLETE
+            System.out.println("Level Complete! Score: " + score);
+        }
     }
 
     public Background getBackground() {
@@ -267,5 +350,19 @@ public class GameManager {
 
     public String getState() {
         return state;
+    }
+    
+    /**
+     * Kiểm tra xem điểm hiện tại có phải high score không
+     */
+    public boolean isHighScore() {
+        return score > 0; // Có thể tích hợp với HighScoreManager nếu cần
+    }
+    
+    /**
+     * Lấy điểm hiện tại để hiển thị trong menu
+     */
+    public int getCurrentScore() {
+        return score;
     }
 }
