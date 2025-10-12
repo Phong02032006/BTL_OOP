@@ -28,7 +28,7 @@ public class GameManager {
         }
         return instance;
     }
-    
+
     /**
      * Reset singleton instance (chỉ dùng khi cần thiết)
      */
@@ -46,7 +46,7 @@ public class GameManager {
     private int score;
     private int lives;
     private String state;
-    
+
     // Game states
     public static final String STATE_MENU = "MENU";
     public static final String STATE_RUNNING = "RUNNING";
@@ -61,45 +61,11 @@ public class GameManager {
      */
 
     private void initBricks() {
-        bricks = new ArrayList<>();
-        double offsetX = (width - Constant.BRICK_COLUMNS * Constant.BRICK_WIDTH) / 2; //khoang cach tu mep
-        double offsetY = 60;
-
-        for (int row = 0; row < Constant.BRICK_ROWS; row++) {
-            for (int col = 0; col < Constant.BRICK_COLUMNS; col++) {
-                double x = offsetX + col * Constant.BRICK_WIDTH; // vi tri cua tung vien gach
-                double y = offsetY + row * Constant.BRICK_HEIGHT;
-                Brick brick;
-
-                if (row == 0) {
-                    brick = new StrongBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT, 2);
-                } else if (row == 1) {
-                    brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-                } else if (row == 2) {
-                    // brick = new BonusBrick(x,y,Constant.BRICK_WIDTH,Constant.BRICK_HEIGHT, 1);
-                    brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-
-                } else if (row == 3) {
-                    brick = new UnbreakableBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-                } else {
-                    brick = new NormalBrick(x, y, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-                }
-                bricks.add(brick);
-                if (Math.random() < 0.2) { // 20% viên gạch có powerup
-                    double px = x + Constant.BRICK_WIDTH / 2 - 10; // đặt powerup giữa viên gạch
-                    double py = y + Constant.BRICK_HEIGHT / 2 - 10;
-
-                    PowerUp powerUp;
-                    if (Math.random() < 0.5) {
-                        powerUp = new ExpandedPaddlePowerUp(px, py);
-                    } else {
-                        powerUp = new FastBallPowerUp(px, py);
-                    }
-
-                    brick.setPowerUp(powerUp);
-                }
-            }
-        }
+        bricks = Arkanoid.util.LevelLoader.loadLevel(
+                "level1.txt",
+                Constant.BRICK_WIDTH,
+                Constant.BRICK_HEIGHT
+        );
     }
 
     /**
@@ -122,7 +88,7 @@ public class GameManager {
         // khoi tao bricks
         initBricks();
     }
-    
+
     /**
      * Reset game để chơi lại
      */
@@ -159,15 +125,15 @@ public class GameManager {
         }
     }
 
-    private void launchedBall(){
+    private void launchedBall() {
         ballLaunched = true;
 
         java.util.Random rand = new java.util.Random();
         //random hướng ngang: -0.8 -> + 0.8 tránh bay thẳng đứng
-        double dirX= (rand.nextDouble() * 1.6 - 0.8);
+        double dirX = (rand.nextDouble() * 1.6 - 0.8);
 
         //copy sign se giu nguyen dau cua dirX Vidu : (0.3, -0.05) -> -0.3
-        if(Math.abs(dirX) < 0.3) dirX = Math.copySign(0.3, dirX);
+        if (Math.abs(dirX) < 0.3) dirX = Math.copySign(0.3, dirX);
 
         ball.setDx(dirX);
         ball.setDirectionY(-1);
@@ -176,12 +142,12 @@ public class GameManager {
     public void update() {
         if (!STATE_RUNNING.equals(state)) return;
 
-        if (movingLeft)  paddle.moveLeft(width);
+        if (movingLeft) paddle.moveLeft(width);
         if (movingRight) paddle.moveRight(width);
 
         if (!ballLaunched) {
-            ball.setX(paddle.getX() + paddle.getWidth()/2 - ball.getWidth()/2);
-            ball.setY(paddle.getY() - paddle.getHeight()/2 - 2);
+            ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
+            ball.setY(paddle.getY() - paddle.getHeight() / 2 - 2);
         } else {
             ball.update();
 
@@ -254,14 +220,14 @@ public class GameManager {
         ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
         ball.setY(paddle.getY() - ball.getHeight() - 2);
         ball.setDirectionY(-1);
-        lives -=1;
+        lives -= 1;
     }
 
     private void gameOver() {
         state = STATE_GAME_OVER;
         System.out.println("Game Over! Final Score: " + score);
     }
-    
+
     /**
      * Tạm dừng game
      */
@@ -270,7 +236,7 @@ public class GameManager {
             state = STATE_PAUSED;
         }
     }
-    
+
     /**
      * Tiếp tục game sau khi tạm dừng
      */
@@ -279,7 +245,7 @@ public class GameManager {
             state = STATE_RUNNING;
         }
     }
-    
+
     /**
      * Toggle pause/resume
      */
@@ -290,14 +256,14 @@ public class GameManager {
             resume();
         }
     }
-    
+
     /**
      * Chuyển về menu
      */
     public void returnToMenu() {
         state = STATE_MENU;
     }
-    
+
     /**
      * Kiểm tra xem có còn gạch để phá không
      */
@@ -309,7 +275,7 @@ public class GameManager {
         }
         return false;
     }
-    
+
     /**
      * Kiểm tra thắng cấp độ
      */
@@ -351,14 +317,14 @@ public class GameManager {
     public String getState() {
         return state;
     }
-    
+
     /**
      * Kiểm tra xem điểm hiện tại có phải high score không
      */
     public boolean isHighScore() {
         return score > 0; // Có thể tích hợp với HighScoreManager nếu cần
     }
-    
+
     /**
      * Lấy điểm hiện tại để hiển thị trong menu
      */

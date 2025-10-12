@@ -3,6 +3,7 @@ package Arkanoid;
 import Arkanoid.Object.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+
 import java.util.List;
 
 public class Renderer {
@@ -21,11 +22,10 @@ public class Renderer {
     }
 
     public void draw(GameObject obj) {
-        if(obj != null){
+        if (obj != null) {
             obj.render(gc);
         }
     }
-
 
 
     public void drawList(List<? extends GameObject> list) {

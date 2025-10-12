@@ -5,6 +5,7 @@ import Arkanoid.util.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+
 /**
  * Lớp trừu tượng PowerUp mô tả các hiệu ứng đặc biệt trong game Arkanoid.
  * - Mỗi PowerUp có loại (type) và thời gian hiệu lực (duration).
@@ -16,7 +17,7 @@ public abstract class PowerUp extends GameObject {
     protected boolean active;
     protected Color color;
     protected long startTime;
-    private  Image image;
+    private Image image;
 
     public PowerUp(double x, double y, double width, double height, String type, double duration, String spritePath) {
         super(x, y, width, height);
