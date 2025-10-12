@@ -1,9 +1,6 @@
 package Arkanoid.Object;
 
 import Arkanoid.util.*;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-
 
 /**
  * PowerUp mở rộng Paddle tạm thời trong 5 giây.
@@ -18,7 +15,7 @@ public class ExpandedPaddlePowerUp extends PowerUp {
                 Constant.POWERUP_SIZE,
                 "ExpandPaddle",
                 Constant.POWERUP_DURATION,
-               "/images/expanded.png");
+                "/images/expanded.png");
         this.color = Constant.POWERUP_EXPAND_COLOR;
     }
 

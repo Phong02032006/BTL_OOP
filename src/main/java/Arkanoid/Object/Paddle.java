@@ -36,7 +36,9 @@ public class Paddle extends MovableObject {
         }
     }
 
-    /** Áp dụng hiệu ứng PowerUp (nếu có) */
+    /**
+     * Áp dụng hiệu ứng PowerUp (nếu có)
+     */
     public void applyPowerUp(PowerUp powerUp) {
         this.currentPowerUp = powerUp;
         if (powerUp != null) {

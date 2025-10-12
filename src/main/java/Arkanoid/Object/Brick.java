@@ -1,13 +1,13 @@
 package Arkanoid.Object;
 
+import Arkanoid.util.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import Arkanoid.util.*;
 
 public abstract class Brick extends GameObject {
     protected int hitPoints;
     protected PowerUp powerUp;
-    private  Image image;
+    protected Image image;
 
     protected Brick(double x, double y, double width, double height, int hitPoints, String spritePath) {
         super(x, y, width, height);
