@@ -24,9 +24,9 @@ public class LevelLoader {
             List<String> lines = new ArrayList<>();
             String line;
 
-            // Đọc toàn bộ file vào danh sách
+
             while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) { // bỏ dòng rỗng
+                if (!line.trim().isEmpty()) {
                     lines.add(line);
                 }
             }
@@ -43,6 +43,7 @@ public class LevelLoader {
             double offsetX = (Constant.SCREEN_WIDTH - totalWidth) / 2;
             double offsetY = 60;
 
+
             // Duyệt từng dòng ký tự và tạo gạch
             for (int row = 0; row < numRows; row++) {
                 String currentLine = lines.get(row);
@@ -52,19 +53,39 @@ public class LevelLoader {
                     double x = offsetX + col * brickWidth;
                     double y = offsetY + row * brickHeight;
 
+                    Brick brick = null;
+
                     switch (c) {
                         case 'N':
-                            bricks.add(new NormalBrick(x, y, brickWidth, brickHeight));
+                            brick = new NormalBrick(x, y, brickWidth, brickHeight);
                             break;
                         case 'S':
-                            bricks.add(new StrongBrick(x, y, brickWidth, brickHeight, 2));
+                            brick = new StrongBrick(x, y, brickWidth, brickHeight, 2);
                             break;
                         case 'U':
-                            bricks.add(new UnbreakableBrick(x, y, brickWidth, brickHeight));
+                            brick = new UnbreakableBrick(x, y, brickWidth, brickHeight);
                             break;
                         case '.':
                         default:
                             break;
+                    }
+
+                    if (brick != null) {
+                        if (!brick.isUnbreakable() && Math.random() < 0.2) {
+                            double px = x + brickWidth / 2 - Constant.POWERUP_SIZE / 2;
+                            double py = y + brickHeight / 2 - Constant.POWERUP_SIZE / 2;
+
+                            PowerUp powerUp;
+                            if (Math.random() < 0.5) {
+                                powerUp = new ExpandedPaddlePowerUp(px, py);
+                            } else {
+                                powerUp = new FastBallPowerUp(px, py);
+                            }
+
+                            brick.setPowerUp(powerUp);
+                        }
+
+                        bricks.add(brick);
                     }
                 }
             }
