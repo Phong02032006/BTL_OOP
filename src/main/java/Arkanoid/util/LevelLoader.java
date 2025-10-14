@@ -6,7 +6,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import Arkanoid.Object.*;
+import Arkanoid.Object.brick.Brick;
+import Arkanoid.Object.brick.NormalBrick;
+import Arkanoid.Object.brick.StrongBrick;
+import Arkanoid.Object.brick.UnbreakableBrick;
+import Arkanoid.Object.powerup.ExpandedPaddlePowerUp;
+import Arkanoid.Object.powerup.FastBallPowerUp;
+import Arkanoid.Object.powerup.PowerUp;
 
 public class LevelLoader {
 

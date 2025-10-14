@@ -1,5 +1,6 @@
 package Arkanoid.Object;
 
+import Arkanoid.Object.powerup.PowerUp;
 import Arkanoid.util.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -18,9 +19,9 @@ public class Paddle extends MovableObject {
         this.image = SpriteManager.getImage("/images/paddle.png");
     }
 
-    /*
-        Speed ở đây là khoảng mà paddle sẽ dịch chuyển mỗi khi hàm được gọi.
-        Ví dụ moveLeft thì paddle sẽ "dịch chuyển" 10 pixel tương tự như hàm moveRight.
+    /**
+     * Speed ở đây là khoảng mà paddle sẽ dịch chuyển mỗi khi hàm được gọi.
+     * Ví dụ moveLeft thì paddle sẽ "dịch chuyển" 10 pixel tương tự như hàm moveRight.
      */
     public void moveLeft(double screenWidth) {
         x -= speed;
