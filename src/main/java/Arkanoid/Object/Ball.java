@@ -16,33 +16,31 @@ public class Ball extends MovableObject {
     }
 
     /**
-     * Kiểm tra va chạm giữa hình tròn (ball) và hình chữ nhật (brick/paddle)
+     * kiểm tra va chạm giữa hình tròn (ball) và hình chữ nhật (brick/paddle)
      */
     public boolean checkCollision(GameObject other) {
-        // Tìm tâm của bóng (hình tròn)
+        // tìm tâm của bóng (hình tròn)
         double ballCenterX = x + width / 2;
         double ballCenterY = y + height / 2;
         double radius = width / 2;
 
-        // Tìm điểm gần nhất trên hình chữ nhật so với tâm bóng
+        // tìm điểm gần nhất trên hình chữ nhật so với tâm bóng
         double closestX = Math.max(other.x, Math.min(ballCenterX, other.x + other.width));
         double closestY = Math.max(other.y, Math.min(ballCenterY, other.y + other.height));
 
-        // Tính khoảng cách từ điểm gần nhất đến tâm bóng
+        // tính khoảng cách từ điểm gần nhất đến tâm bóng
         double distanceX = ballCenterX - closestX;
         double distanceY = ballCenterY - closestY;
         double distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
 
-        // Va chạm nếu khoảng cách <= bán kính
+        // va chạm nếu khoảng cách <= bán kính
         return distanceSquared <= (radius * radius);
     }
 
     /**
-     * Xử lý phản xạ khi bóng va chạm với paddle hoặc các đối tượng khác (brick, tường...).
-     * Nếu va vào Paddle phản xạ theo góc tùy thuộc vào vị trí va chạm (để tránh bóng đi thẳng đứng).
-     * Nếu va vào Brick hoặc tường: phản xạ theo hướng tiếp xúc và reposition bóng ra khỏi đối tượng để tránh bị kẹt.
-     *
-     * @param other Đối tượng mà bóng va chạm.
+     * xử lý phản xạ khi bóng va chạm với paddle hoặc các đối tượng khác
+     * nếu va vào Paddle phản xạ theo góc tùy thuộc vào vị trí va chạm (để tránh bóng đi thẳng đứng).
+     * nếu va vào Brick hoặc tường: phản xạ theo hướng tiếp xúc và đặt lại vị trí bóng ra khỏi đối tượng để tránh bị kẹt.
      */
     public void bounceOff(GameObject other) {
         // Tâm bóng và tâm đối tượng va chạm
@@ -96,6 +94,7 @@ public class Ball extends MovableObject {
                     // Bóng va từ trên xuống
                     y = other.y - height - epsilon;
                     dy = -Math.abs(dy); // bật lên
+
                 }
             } else {
                 // Va theo chiều ngang
@@ -107,6 +106,7 @@ public class Ball extends MovableObject {
                     // Bóng va từ trái sang phải
                     x = other.x - width - epsilon;
                     dx = -Math.abs(dx); // bật sang trái
+
                 }
             }
         }
@@ -118,24 +118,25 @@ public class Ball extends MovableObject {
         x += dx * speed;
         y += dy * speed;
 
-        double radius = width / 2;
-
-        //  Bật trái
+        //left
         if (x <= 0) {
-            x = 0;             // 👈 đặt sát mép
-            dx = Math.abs(dx); // bật qua phải
+            x = 0;
+            dx = Math.abs(dx);
+            SoundManager.playSound("hit_wall.wav");
         }
 
-        //  Bật phải
+        //right
         if (x + width >= Constant.SCREEN_WIDTH) {
-            x = Constant.SCREEN_WIDTH - width;  // đặt sát mép phải
-            dx = -Math.abs(dx);                 // bật qua trái
+            x = Constant.SCREEN_WIDTH - width;
+            dx = -Math.abs(dx);
+            SoundManager.playSound("hit_wall.wav");
         }
 
-        //  Bật trên
+        //upper wall
         if (y <= 0) {
             y = 0;
             dy = Math.abs(dy);
+            SoundManager.playSound("hit_wall.wav");
         }
     }
 
