@@ -17,6 +17,10 @@ import javafx.stage.Stage;
 public class GameManager {
     private static GameManager instance;
     private boolean ballLaunched;
+    private int curLevel ;
+    private final String[] LEVELS = {
+            "level1.txt","level2.txt","level3.txt","level4.txt","level5.txt","level6.txt","level7.txt" };
+            // danh sach cac level cho nguoi choi
 
     private GameManager() {
         // Private constructor để đảm bảo Singleton pattern
@@ -60,9 +64,9 @@ public class GameManager {
     .Khoi tao tro choi
      */
 
-    private void initBricks() {
+    private void initBricks(String levelFile) {
         bricks = Arkanoid.util.LevelLoader.loadLevel(
-                "level1.txt",
+                levelFile,
                 Constant.BRICK_WIDTH,
                 Constant.BRICK_HEIGHT
         );
@@ -75,9 +79,11 @@ public class GameManager {
         background = new Background("/images/background.png");
         paddle = new Paddle(width / 2 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
         double ballX = (width / 2) - (Constant.BALL_RADIUS / 2);
+        curLevel = 0;
         double ballY = height - 30 - Constant.PADDLE_HEIGHT - Constant.BALL_RADIUS - 2;
         ball = new Ball(ballX, ballY, Constant.BALL_RADIUS, Constant.BALL_SPEED, 1, -1);
-        bricks = new ArrayList<>();
+        bricks = Arkanoid.util.LevelLoader.loadLevel(LEVELS[curLevel],
+                Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
         powerUps = new ArrayList<>();
         activePowerUps = new ArrayList<>();
         score = 0;
@@ -85,8 +91,8 @@ public class GameManager {
         state = STATE_RUNNING;
         ballLaunched = false;
 
-        // khoi tao bricks
-        initBricks();
+
+
     }
 
     /**
@@ -214,6 +220,51 @@ public class GameManager {
         if (lives <= 0) gameOver();
         checkLevelComplete();
     }
+    private void nextLevel() {
+        // tăng màn lên rồi mới check có trong phạm vi mảng LEVElS không
+        if (++curLevel < LEVELS.length) {
+            if (activePowerUps != null) {
+                Iterator<PowerUp> it = activePowerUps.iterator();
+                //dung iterator để xóa phàn tử một cách an toàn
+                while (it.hasNext()) {
+                    PowerUp ap = it.next();
+                    try {
+                        ap.removeEffect(paddle, ball);
+                    } catch (Exception ignored) {}
+                    it.remove();
+                }
+            }
+            if (powerUps != null) powerUps.clear(); //xóa để tránh hiện tượng vừa sang màn có powerup rơi
+
+            bricks = Arkanoid.util.LevelLoader.loadLevel(
+                    LEVELS[curLevel],
+                    Constant.BRICK_WIDTH,
+                    Constant.BRICK_HEIGHT
+            );
+            // Tắt cờ di chuyển để tránh paddle tiếp tục trôi theo phím giữ ở frame trước
+            movingLeft = false;
+            movingRight = false;
+            ballLaunched = false;
+
+            try { paddle.setY(height - 30); } catch (Exception ignored) {}
+            paddle.setX(width / 2 - Constant.PADDLE_WIDTH / 2);
+
+            // set lại vị trí các object
+            ball.setDx(0);
+            ball.setDirectionY(-1);
+            ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
+            ball.setY(paddle.getY() - ball.getHeight() - 2);
+
+            state = STATE_RUNNING;
+            System.out.println("➡️ Level " + (curLevel + 1) + " start!");
+        } else {
+            state = STATE_GAME_OVER;
+            System.out.println("🎉 All levels cleared! Final Score: " + score);
+        }
+    }
+
+
+
 
     private void resetBall() {
         ballLaunched = false;
@@ -277,14 +328,16 @@ public class GameManager {
     }
 
     /**
-     * Kiểm tra thắng cấp độ
+     * Kiểm tra thắng cấp độx`
      */
     private void checkLevelComplete() {
+        // Khi không còn bất kỳ viên gạch phá được nào
         if (!hasRemainingBricks()) {
-            state = STATE_GAME_OVER; // Có thể mở rộng thành STATE_LEVEL_COMPLETE
-            System.out.println("Level Complete! Score: " + score);
+            System.out.println("Level " + (curLevel + 1) + " Complete! Score: " + score);
+            nextLevel(); // qua màn kế tiếp (hoặc kết thúc nếu đã hết LEVELS)
         }
     }
+
 
     public Background getBackground() {
         return background;
