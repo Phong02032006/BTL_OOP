@@ -1,9 +1,9 @@
 package Arkanoid.core;
 
-import Arkanoid.UI.SimpleGameOverScreen;
-import Arkanoid.UI.SimpleMenuScreen;
-import Arkanoid.UI.SimplePauseMenu;
+import Arkanoid.UI.*;
 import Arkanoid.util.Constant;
+import Arkanoid.util.HighScoreManager;
+import Arkanoid.util.SoundManager;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -28,8 +28,11 @@ public class Main extends Application {
     private SimpleMenuScreen menuScreen;
     private SimplePauseMenu pauseMenu;
     private SimpleGameOverScreen gameOverScreen;
+    private SettingsScreen settingsScreen;
+    private HighScoreScreen highScoreScreen;
+    private PlayerNameInputScreen playerNameInputScreen;
 
-    private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER
+    private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER, SETTINGS, HIGHSCORES, NAME_INPUT
 
     @Override
     public void start(Stage stage) {
@@ -42,6 +45,10 @@ public class Main extends Application {
         // Tạo canvas và graphics context
         canvas = new Canvas(width, height);
         gc = canvas.getGraphicsContext2D();
+
+        // Khởi tạo các managers
+        SoundManager.initialize();
+        HighScoreManager.initialize();
 
         // Tạo game manager và renderer
         gm = GameManager.getInstance();
@@ -92,10 +99,8 @@ public class Main extends Application {
         // Menu Screen
         menuScreen = new SimpleMenuScreen();
         menuScreen.setOnStart(() -> startGame());
-        menuScreen.setOnHighScores(() -> {
-            // Không có chức năng high score trong phiên bản đơn giản
-            System.out.println("High Score feature not available in simple version");
-        });
+        menuScreen.setOnHighScores(() -> showHighScoreScreen());
+        menuScreen.setOnSettings(() -> showSettingsScreen());
         menuScreen.setOnExit(() -> Platform.exit());
 
         // Pause Menu
@@ -108,6 +113,14 @@ public class Main extends Application {
         gameOverScreen = new SimpleGameOverScreen();
         gameOverScreen.setOnRestart(() -> restartGame());
         gameOverScreen.setOnMainMenu(() -> returnToMenu());
+
+        // Settings Screen
+        settingsScreen = new SettingsScreen();
+        settingsScreen.setOnBack(() -> returnToMenu());
+
+        // High Score Screen
+        highScoreScreen = new HighScoreScreen();
+        highScoreScreen.setOnBack(() -> returnToMenu());
     }
 
     /**
@@ -215,18 +228,62 @@ public class Main extends Application {
     private void returnToMenu() {
         gm.returnToMenu();
         showMenuScreen();
+        // Cập nhật điểm cao nhất trên menu
+        menuScreen.updateHighScore(HighScoreManager.getHighestScore());
     }
 
     /**
      * Hiển thị màn hình game over
      */
     private void showGameOverScreen() {
-        currentScreen = "GAMEOVER";
-        gameOverScreen.setScore(gm.getScore());
-        root.getChildren().clear();
-        root.getChildren().add(gameOverScreen);
+        // Kiểm tra xem có phải điểm cao không
+        if (HighScoreManager.isHighScore(gm.getScore())) {
+            // Nếu là điểm cao, hiển thị màn hình nhập tên trực tiếp
+            showPlayerNameInputScreen();
+        } else {
+            // Nếu không phải điểm cao, hiển thị màn hình game over bình thường
+            currentScreen = "GAMEOVER";
+            gameOverScreen.setScore(gm.getScore());
+            root.getChildren().clear();
+            root.getChildren().add(gameOverScreen);
+        }
     }
 
+    /**
+     * Hiển thị màn hình Settings
+     */
+    private void showSettingsScreen() {
+        currentScreen = "SETTINGS";
+        root.getChildren().clear();
+        root.getChildren().add(settingsScreen);
+    }
+
+    /**
+     * Hiển thị màn hình High Score
+     */
+    private void showHighScoreScreen() {
+        currentScreen = "HIGHSCORES";
+        highScoreScreen.refreshHighScores();
+        root.getChildren().clear();
+        root.getChildren().add(highScoreScreen);
+    }
+
+    /**
+     * Hiển thị màn hình nhập tên người chơi
+     */
+    private void showPlayerNameInputScreen() {
+        currentScreen = "NAME_INPUT";
+        playerNameInputScreen = new PlayerNameInputScreen(gm.getScore());
+        playerNameInputScreen.setOnSubmit(() -> {
+            // Sau khi submit tên, quay về màn hình menu chính
+            returnToMenu();
+        });
+        playerNameInputScreen.setOnSkip(() -> {
+            // Sau khi skip, quay về màn hình menu chính
+            returnToMenu();
+        });
+        root.getChildren().add(playerNameInputScreen);
+    }
 
     public static void main(String[] args) {
         launch(args);
