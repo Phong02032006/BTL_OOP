@@ -334,6 +334,19 @@ public class GameManager {
         System.out.println("Game Over! Final Score: " + score);
     }
 
+
+    public void pause() {
+        if (STATE_RUNNING.equals(state)) {
+            state = STATE_PAUSED;
+        }
+    }
+
+    public void resume() {
+        if (STATE_PAUSED.equals(state)) {
+            state = STATE_RUNNING;
+        }
+    }
+
     private void checkLevelComplete() {
         if (!hasRemainingBricks()) {
             System.out.println("Level " + (curLevel + 1) + " Complete! Score: " + score);
