@@ -11,7 +11,7 @@ public class Ball extends MovableObject {
     private double prevX;
     private double prevY;
 
-    public Ball(double x, double y, double radius, double speed, int dx, int dy) {
+    public Ball(double x, double y, double radius, double speed, double dx, double dy) {
         super(x, y, radius, radius, dx, dy);
         this.speed = speed;
         this.image = SpriteManager.getImage("/images/ball.png");
@@ -190,26 +190,30 @@ public class Ball extends MovableObject {
         x += dx * speed;
         y += dy * speed;
 
-        //left
-        if (x <= 0) {
-            x = 0;
+        double left = Constant.BORDER_LEFT;
+        double right = Constant.BORDER_RIGHT;
+        double top = Constant.BORDER_TOP;
+        double bottom = Constant.BORDER_BOTTOM;
+
+
+        if (x <= left) {
+            x = left;
             dx = Math.abs(dx);
             SoundManager.playSound("hit_wall.wav");
         }
 
-        //right
-        if (x + width >= Constant.SCREEN_WIDTH) {
-            x = Constant.SCREEN_WIDTH - width;
+        if (x + width >= right) {
+            x = right - width;
             dx = -Math.abs(dx);
             SoundManager.playSound("hit_wall.wav");
         }
 
-        //upper wall
-        if (y <= 0) {
-            y = 0;
+        if (y <= top) {
+            y = top;
             dy = Math.abs(dy);
             SoundManager.playSound("hit_wall.wav");
         }
+
     }
 
     @Override

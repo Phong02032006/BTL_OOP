@@ -71,9 +71,10 @@ public class Renderer {
         clear(width, height);
         game.getBackground().render(gc, width, height);
         draw(game.getPaddle());
-        draw(game.getBall());
+        drawList(game.getBalls());
         drawList(game.getBricks());
         drawList(game.getPowerUps());
+        drawList(game.getLasers());
         drawHUD(game.getScore(), game.getLives(), game.getState());
     }
 }

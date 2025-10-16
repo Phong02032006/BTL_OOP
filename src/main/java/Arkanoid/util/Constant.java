@@ -10,6 +10,10 @@ public class Constant {
     //  Kích thước màn hình
     public static final int SCREEN_WIDTH = 800;
     public static final int SCREEN_HEIGHT = 600;
+    public static final double BORDER_LEFT = 16;
+    public static final double BORDER_RIGHT = Constant.SCREEN_WIDTH - 16;
+    public static final double BORDER_TOP = 16;
+    public static final double BORDER_BOTTOM = Constant.SCREEN_HEIGHT - 16;
 
     //  Paddle
     public static final double PADDLE_WIDTH = 128;
@@ -19,6 +23,11 @@ public class Constant {
     //  Ball
     public static final double BALL_RADIUS = 20;
     public static final double BALL_SPEED = 3;
+
+    //Laser
+    public static final double LASER_WIDTH = 8;
+    public static final double LASER_HEIGHT = 16;
+    public static final double LASER_SPEED = 7.0;
 
     //  Brick
     public static final double BRICK_WIDTH = 64;
@@ -30,6 +39,7 @@ public class Constant {
     public static final double POWERUP_DURATION = 2000;
     public static final Color POWERUP_EXPAND_COLOR = Color.LIMEGREEN;
     public static final Color POWERUP_FAST_COLOR = Color.MEDIUMPURPLE;
+    public static final Color POWERUP_DOUBLE_COLOR = Color.MEDIUMPURPLE;
     // 2s
 
 

@@ -10,9 +10,7 @@ import Arkanoid.Object.brick.Brick;
 import Arkanoid.Object.brick.NormalBrick;
 import Arkanoid.Object.brick.StrongBrick;
 import Arkanoid.Object.brick.UnbreakableBrick;
-import Arkanoid.Object.powerup.ExpandedPaddlePowerUp;
-import Arkanoid.Object.powerup.FastBallPowerUp;
-import Arkanoid.Object.powerup.PowerUp;
+import Arkanoid.Object.powerup.*;
 
 public class LevelLoader {
 
@@ -81,23 +79,26 @@ public class LevelLoader {
                             double px = x + brickWidth / 2 - Constant.POWERUP_SIZE / 2;
                             double py = y + brickHeight / 2 - Constant.POWERUP_SIZE / 2;
 
-                            PowerUp powerUp;
-                            if (Math.random() < 0.5) {
+                            double r = Math.random(); // Tạo số ngẫu nhiên từ 0.0 đến 1.0
+                            PowerUp powerUp = null;
+
+                            if (r < 0.20) {
+                                powerUp = new LaserPowerUp(px, py);
+                            } else if (r < 0.40) {
                                 powerUp = new ExpandedPaddlePowerUp(px, py);
-                            } else if (Math.random() < 0.4) {
+                            } else if (r < 0.60) {
                                 powerUp = new FastBallPowerUp(px, py);
                             } else {
                                 powerUp = new DoubleBall(px, py);
                             }
-
                             brick.setPowerUp(powerUp);
+
                         }
 
                         bricks.add(brick);
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

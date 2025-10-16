@@ -180,7 +180,6 @@ public class Main extends Application {
      */
     private void pauseGame() {
         if (GameManager.STATE_RUNNING.equals(gm.getState())) {
-            gm.pause();
             currentScreen = "PAUSE";
             root.getChildren().add(pauseMenu); // Overlay trên canvas
         }
@@ -191,7 +190,6 @@ public class Main extends Application {
      */
     private void resumeGame() {
         if (GameManager.STATE_PAUSED.equals(gm.getState())) {
-            gm.resume();
             currentScreen = "GAME";
             root.getChildren().remove(pauseMenu);
             canvas.requestFocus();
