@@ -84,8 +84,10 @@ public class LevelLoader {
                             PowerUp powerUp;
                             if (Math.random() < 0.5) {
                                 powerUp = new ExpandedPaddlePowerUp(px, py);
-                            } else {
+                            } else if (Math.random() < 0.4) {
                                 powerUp = new FastBallPowerUp(px, py);
+                            } else {
+                                powerUp = new DoubleBall(px, py);
                             }
 
                             brick.setPowerUp(powerUp);

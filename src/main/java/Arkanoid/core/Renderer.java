@@ -3,6 +3,9 @@ package Arkanoid.core;
 import Arkanoid.Object.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -36,13 +39,33 @@ public class Renderer {
     }
 
     public void drawHUD(int score, int lives, String state) {
-        gc.setFill(Color.WHITE);
-        gc.fillText("Score: " + score, 20, 20);
-        gc.fillText("Lives: " + lives, 20, 40);
+        // Font Courier New đậm và lớn hơn
+        gc.setFont(Font.font("Courier New", FontWeight.BOLD, 20));
+
+        // Thiết lập màu và viền để chữ nổi bật
+        gc.setFill(Color.WHITE);          // màu chính
+        gc.setStroke(Color.BLACK);      // viền ngoài
+        gc.setLineWidth(2);             // độ dày viền
+
+        // Score
+        gc.strokeText("Score: " + score, 30, 30);
+        gc.fillText("Score: " + score, 30, 30);
+
+        // Lives
+        gc.strokeText("Lives: " + lives, 30, 60);
+        gc.fillText("Lives: " + lives, 30, 60);
+
+        // State (nếu có)
         if (state != null && !"RUNNING".equals(state)) {
-            gc.fillText("State: " + state, 20, 60);
+            gc.setFill(Color.ORANGE);
+            gc.setStroke(Color.BLACK);
+            gc.setLineWidth(3);
+            gc.strokeText("State: " + state, 20, 90);
+            gc.fillText("State: " + state, 20, 90);
         }
     }
+
+
 
     public void renderAll(GameManager game, double width, double height) {
         clear(width, height);
