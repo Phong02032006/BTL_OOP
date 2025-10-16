@@ -182,7 +182,7 @@ public class GameManager {
                 Brick brick = bricks.get(i);
                 if (ball.checkCollision(brick)) {
 
-                    ball.bounceOff(brick);
+                    ball.sweepBounceOff(brick);
 
                     SoundManager.playSound("hit_brick.wav");
 

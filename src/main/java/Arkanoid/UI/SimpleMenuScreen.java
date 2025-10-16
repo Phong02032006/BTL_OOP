@@ -125,7 +125,7 @@ public class SimpleMenuScreen extends VBox {
         menuBox.setAlignment(Pos.CENTER);
         
         // Tạo các menu items với hiệu ứng arrow selection
-        startButton = createMenuOption("► 1 PLAYER", true);
+        startButton = createMenuOption(" 1 PLAYER", true);
         highScoresButton = createMenuOption("  HIGH SCORES", false);
         exitButton = createMenuOption("  EXIT", false);
         
@@ -186,7 +186,7 @@ public class SimpleMenuScreen extends VBox {
         });
         
         startButton.setOnMouseExited(e -> {
-            startButton.setText("► 1 PLAYER");
+            startButton.setText(" 1 PLAYER");
             startButton.setStyle(
                 "-fx-text-fill: #ffffff;" +
                 "-fx-background-color: transparent;" +
