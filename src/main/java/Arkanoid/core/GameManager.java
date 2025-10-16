@@ -1,25 +1,27 @@
 package Arkanoid.core;
 
 import Arkanoid.Object.*;
+import Arkanoid.Object.brick.Brick;
+import Arkanoid.Object.powerup.PowerUp;
+import Arkanoid.util.Constant;
+import Arkanoid.util.LevelLoader;
+import Arkanoid.util.SoundManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-
-import Arkanoid.Object.brick.Brick;
-import Arkanoid.Object.powerup.PowerUp;
-import Arkanoid.util.*;
+import java.util.Random;
 
 public class GameManager {
     private static GameManager instance;
     private boolean ballLaunched;
     private int curLevel;
     private final String[] LEVELS = {"level1.txt", "level2.txt", "level3.txt", "level4.txt", "level5.txt", "level6.txt", "level7.txt"};
-    // danh sach cac level cho nguoi choi
+    private final List<Laser> lasers = new ArrayList<>();
+    private static final long LASER_COOLDOWN = 300;
+    private long lastLaserFireTime = 0;
 
     private GameManager() {
-        // Private constructor để đảm bảo Singleton pattern
     }
 
     public static GameManager getInstance() {
@@ -29,24 +31,21 @@ public class GameManager {
         return instance;
     }
 
-    /**
-     * Reset singleton instance (chỉ dùng khi cần thiết)
-     */
     public static void resetInstance() {
         instance = null;
     }
 
     private Background background;
     private Paddle paddle;
-    private Ball ball;
+    // HỢP NHẤT: Chỉ dùng một danh sách cho tất cả bóng
+    private final List<Ball> balls = new ArrayList<>();
     private List<Brick> bricks;
-    private List<PowerUp> powerUps;
-    private List<PowerUp> activePowerUps;
+    private final List<PowerUp> powerUps = new ArrayList<>();
+    private final List<PowerUp> activePowerUps = new ArrayList<>();
 
     private int score;
     private int lives;
     private String state;
-
 
     // Game states
     public static final String STATE_MENU = "MENU";
@@ -57,65 +56,35 @@ public class GameManager {
     private static final int width = Constant.SCREEN_WIDTH;
     private static final int height = Constant.SCREEN_HEIGHT;
 
-    /**
-    .Khoi tao tro choi
-     */
+    private boolean movingLeft = false;
+    private boolean movingRight = false;
 
-    private void initBricks(String levelFile) {
-        bricks = Arkanoid.util.LevelLoader.loadLevel(levelFile, Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-    }
-
-    /**
-     * khoi tao vi tri cac obj
-     */
     public void start() {
         SoundManager.playBackground();
         background = new Background("/images/background.png");
-        paddle = new Paddle(width / 2 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
-        double ballX = (width / 2) - (Constant.BALL_RADIUS / 2);
+        paddle = new Paddle(width / 2.0 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
         curLevel = 0;
-        double ballY = height - 30 - Constant.PADDLE_HEIGHT - Constant.BALL_RADIUS - 2;
-        ball = new Ball(ballX, ballY, Constant.BALL_RADIUS, Constant.BALL_SPEED, 1, -1);
-        bricks = Arkanoid.util.LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-        powerUps = new ArrayList<>();
-        activePowerUps = new ArrayList<>();
+
+        bricks = LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
+        powerUps.clear();
+        activePowerUps.clear();
+
         score = 0;
         lives = 3;
         state = STATE_RUNNING;
-        ballLaunched = false;
+
+        // Bắt đầu với một quả bóng duy nhất
+        addNewBallOnPaddle();
     }
 
-    /**
-     * Reset game để chơi lại
-     */
     public void restart() {
         SoundManager.stopBackground();
-
         start();
-
         movingLeft = false;
         movingRight = false;
-
-
-        if (paddle != null) {
-            paddle.setX(width / 2 - Constant.PADDLE_WIDTH / 2);
-            paddle.setY(height - 30);
-        }
-
-
-        if (ball != null) {
-            ballLaunched = false;
-            ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
-            ball.setY(paddle.getY() - ball.getHeight() - 2);
-            ball.setDirectionY(-1);
-        }
-
         SoundManager.playBackground();
         System.out.println("🔁 Game restarted!");
     }
-
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
 
     // Nhận input
     public void onKeyPressed(String key) {
@@ -127,7 +96,9 @@ public class GameManager {
                 movingRight = true;
                 break;
             case "SPACE":
-                if (!ballLaunched) launchedBall();
+                if (!ballLaunched) {
+                    launchBall();
+                }
                 break;
         }
     }
@@ -143,18 +114,49 @@ public class GameManager {
         }
     }
 
-    private void launchedBall() {
-        ballLaunched = true;
+    private void launchBall() {
+        if (!balls.isEmpty()) {
+            ballLaunched = true;
+            Random rand = new Random();
+            double dirX = (rand.nextDouble() * 1.6 - 0.8);
+            if (Math.abs(dirX) < 0.3) {
+                dirX = Math.copySign(0.3, dirX);
+            }
 
-        java.util.Random rand = new java.util.Random();
-        //random hướng ngang: -0.8 -> + 0.8 tránh bay thẳng đứng
-        double dirX = (rand.nextDouble() * 1.6 - 0.8);
+            Ball mainBall = balls.get(0);
+            mainBall.setDx(dirX);
+            mainBall.setDirectionY(-1);
+        }
+    }
 
-        //copy sign se giu nguyen dau cua dirX Vidu : (0.3, -0.05) -> -0.3
-        if (Math.abs(dirX) < 0.3) dirX = Math.copySign(0.3, dirX);
+    private void updateLasers() {
+        Iterator<Laser> laserIterator = lasers.iterator();
+        while (laserIterator.hasNext()) {
+            Laser laser = laserIterator.next();
+            laser.update();
+            if (laser.isOffScreen()) {
+                laserIterator.remove();
+                continue;
+            }
 
-        ball.setDx(dirX);
-        ball.setDirectionY(-1);
+
+            for (int i = bricks.size() - 1; i >= 0; i--) {
+                Brick brick = bricks.get(i);
+                if (laser.checkCollision(brick)) {
+                    laserIterator.remove(); // Xóa viên đạn
+                    SoundManager.playSound("hit_brick.wav");
+
+                    if (brick.takeHit()) { // Gạch nhận sát thương
+                        if (brick.hasPowerUp()) {
+                            powerUps.add(brick.getPowerUp());
+                        }
+                        bricks.remove(i);
+                        score += 10;
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public void update() {
@@ -164,175 +166,181 @@ public class GameManager {
         if (movingRight) paddle.moveRight(width);
 
         if (!ballLaunched) {
-            ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
-            ball.setY(paddle.getY() - paddle.getHeight() / 2 - 2);
-        } else {
-            ball.update();
 
-            // Kiểm tra va chạm với paddle (chỉ khi bóng đang rơi xuống)
-            if (ball.checkCollision(paddle) && ball.getDy() > 0) {
-                ball.bounceOff(paddle);
-                // Đảm bảo bóng không bị dính vào paddle
-                ball.setY(paddle.getY() - ball.getHeight() - 1);
-                SoundManager.playSound("hit_paddle.wav");
+            if (!balls.isEmpty()) {
+                Ball ball = balls.get(0);
+                ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
+                ball.setY(paddle.getY() - ball.getHeight() - 2);
             }
-
-            // Kiểm tra va chạm với các viên gạch
-            for (int i = bricks.size() - 1; i >= 0; i--) {
-                Brick brick = bricks.get(i);
-                if (ball.checkCollision(brick)) {
-
-                    ball.sweepBounceOff(brick);
-
-                    SoundManager.playSound("hit_brick.wav");
-
-                    boolean destroyed = brick.takeHit();
-
-                    if (destroyed) {
-                        if (brick.hasPowerUp()) {
-                            powerUps.add(brick.getPowerUp());
-                        }
-                        bricks.remove(i);
-                        score += 10;
-                    }
-
-                    break;
+        } else {
+            if (paddle.isLaserEquipped()) {
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastLaserFireTime > LASER_COOLDOWN) {
+                    fireLasers();
+                    lastLaserFireTime = currentTime;
                 }
             }
 
-            if (ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT) resetBall();
+            Iterator<Ball> ballIterator = balls.iterator();
+            while (ballIterator.hasNext()) {
+                Ball ball = ballIterator.next();
+                ball.update();
+
+                // Va chạm với paddle
+                if (ball.checkCollision(paddle) && ball.getDy() > 0) {
+                    ball.bounceOff(paddle);
+                    ball.setY(paddle.getY() - ball.getHeight() - 1); // Tránh bị kẹt
+                    SoundManager.playSound("hit_paddle.wav");
+                }
+
+                // Va chạm với gạch
+                for (int i = bricks.size() - 1; i >= 0; i--) {
+                    Brick brick = bricks.get(i);
+                    if (ball.checkCollision(brick)) {
+                        ball.sweepBounceOff(brick);
+                        SoundManager.playSound("hit_brick.wav");
+
+                        if (brick.takeHit()) {
+                            if (brick.hasPowerUp()) {
+                                powerUps.add(brick.getPowerUp());
+                            }
+                            bricks.remove(i);
+                            score += 10;
+                        }
+                        break; // Mỗi quả bóng chỉ va chạm 1 viên gạch mỗi frame
+                    }
+                }
+
+                // Nếu bóng rơi ra ngoài
+                if (ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT) {
+                    ballIterator.remove();
+                }
+            }
+
+            // Nếu không còn quả bóng nào trên màn hình -> mất mạng
+            if (balls.isEmpty()) {
+                loseLife();
+            }
+
+            updateLasers();
         }
-        for (int i = powerUps.size() - 1; i >= 0; i--) {
-            PowerUp pu = powerUps.get(i);
+
+        updatePowerUps();
+
+        if (lives <= 0) {
+            gameOver();
+        }
+        checkLevelComplete();
+    }
+
+    private void updatePowerUps() {
+        // Cập nhật power-up đang rơi
+        Iterator<PowerUp> puIterator = powerUps.iterator();
+        while (puIterator.hasNext()) {
+            PowerUp pu = puIterator.next();
             pu.update();
 
-            boolean removed = false;
-
             if (pu.getY() > Constant.SCREEN_HEIGHT) {
-                powerUps.remove(i);
-                removed = true;
-            }
-
-            if (!removed && pu.checkCollision(paddle)) {
-                pu.applyEffect(paddle, ball);
+                puIterator.remove();
+            } else if (pu.checkCollision(paddle)) {
+                // Chỉ lấy bóng đầu tiên trong list để áp dụng hiệu ứng (nếu cần)
+                pu.applyEffect(paddle, balls.isEmpty() ? null : balls.get(0));
                 SoundManager.playSound("power_up.wav");
                 activePowerUps.add(pu);
-                powerUps.remove(i);
+                puIterator.remove();
             }
         }
 
+        // Cập nhật power-up đang kích hoạt
         Iterator<PowerUp> activeIterator = activePowerUps.iterator();
         while (activeIterator.hasNext()) {
             PowerUp activePU = activeIterator.next();
             if (activePU.isExpired()) {
-                activePU.removeEffect(paddle, ball);
+                // Chỉ lấy bóng đầu tiên trong list để gỡ hiệu ứng (nếu cần)
+                activePU.removeEffect(paddle, balls.isEmpty() ? null : balls.get(0));
                 activeIterator.remove();
             }
         }
-
-        if (lives <= 0) gameOver();
-        checkLevelComplete();
     }
 
     private void nextLevel() {
-        // tăng màn lên rồi mới check có trong phạm vi mảng LEVElS không
-        if (++curLevel < LEVELS.length) {
-            if (activePowerUps != null) {
-                Iterator<PowerUp> it = activePowerUps.iterator();
-                //dung iterator để xóa phàn tử một cách an toàn
-                while (it.hasNext()) {
-                    PowerUp ap = it.next();
-                    try {
-                        ap.removeEffect(paddle, ball);
-                    } catch (Exception ignored) {
-                    }
-                    it.remove();
-                }
-            }
-            if (powerUps != null) powerUps.clear(); //xóa để tránh hiện tượng vừa sang màn có powerup rơi
+        curLevel++;
+        if (curLevel < LEVELS.length) {
+            // Xóa hết các hiệu ứng và power-up cũ
+            activePowerUps.forEach(pu -> pu.removeEffect(paddle, balls.isEmpty() ? null : balls.get(0)));
+            activePowerUps.clear();
+            powerUps.clear();
 
-            bricks = Arkanoid.util.LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-            // Tắt cờ di chuyển để tránh paddle tiếp tục trôi theo phím giữ ở frame trước
-            movingLeft = false;
-            movingRight = false;
-            ballLaunched = false;
+            // Tải màn mới
+            bricks = LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
 
-            try {
-                paddle.setY(height - 30);
-            } catch (Exception ignored) {
-            }
-            paddle.setX(width / 2 - Constant.PADDLE_WIDTH / 2);
+            // Reset paddle và bóng
+            paddle.setX(width / 2.0 - Constant.PADDLE_WIDTH / 2.0);
+            paddle.setY(height - 30);
 
-            // set lại vị trí các object
-            ball.setDx(0);
-            ball.setDirectionY(-1);
-            ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
-            ball.setY(paddle.getY() - ball.getHeight() - 2);
+            addNewBallOnPaddle();
 
-            state = STATE_RUNNING;
-            System.out.println(" Level " + (curLevel + 1) + " start!");
+            System.out.println("Level " + (curLevel + 1) + " start!");
         } else {
             state = STATE_GAME_OVER;
-            System.out.println(" All levels cleared! Final Score: " + score);
+            System.out.println("All levels cleared! Final Score: " + score);
+        }
+    }
+
+    /**
+     * Xử lý khi người chơi mất một mạng
+     */
+    private void loseLife() {
+        lives--;
+        SoundManager.playSound("lose_life.wav");
+        if (lives > 0) {
+            // Xóa hết các hiệu ứng
+            activePowerUps.forEach(pu -> pu.removeEffect(paddle, null));
+            activePowerUps.clear();
+            // Tạo lại một quả bóng mới
+            addNewBallOnPaddle();
         }
     }
 
 
-    private void resetBall() {
+
+    private void fireLasers() {
+        // Tạo 2 viên đạn từ 2 bên của paddle
+        double laserX1 = paddle.getX() + 7; // Vị trí nòng trái
+        double laserX2 = paddle.getX() + paddle.getWidth() - 11; // Vị trí nòng phải
+        double laserY = paddle.getY();
+
+        lasers.add(new Laser(laserX1, laserY));
+        lasers.add(new Laser(laserX2, laserY));
+
+        SoundManager.playSound("laser_shoot.wav"); // Bạn cần có file âm thanh này
+    }
+
+    /**
+     * Tạo một quả bóng mới trên thanh đỡ và reset trạng thái phóng.
+     */
+    private void addNewBallOnPaddle() {
+        balls.clear(); // Xóa hết bóng cũ
         ballLaunched = false;
-        ball.setX(paddle.getX() + paddle.getWidth() / 2 - ball.getWidth() / 2);
-        ball.setY(paddle.getY() - ball.getHeight() - 2);
-        ball.setDirectionY(-1);
-        lives -= 1;
-        SoundManager.playSound("lose_life.wav");
+        double ballX = paddle.getX() + paddle.getWidth() / 2 - Constant.BALL_RADIUS;
+        double ballY = paddle.getY() - Constant.BALL_RADIUS * 2 - 2;
+        Ball newBall = new Ball(ballX, ballY, Constant.BALL_RADIUS, Constant.BALL_SPEED, 0, -1);
+        balls.add(newBall);
     }
 
     private void gameOver() {
         state = STATE_GAME_OVER;
         SoundManager.playSound("end_game.wav");
         System.out.println("Game Over! Final Score: " + score);
-
     }
 
-    /**
-     * Tạm dừng game
-     */
-    public void pause() {
-        if (STATE_RUNNING.equals(state)) {
-            state = STATE_PAUSED;
+    private void checkLevelComplete() {
+        if (!hasRemainingBricks()) {
+            System.out.println("Level " + (curLevel + 1) + " Complete! Score: " + score);
+            nextLevel();
         }
     }
 
-    /**
-     * Tiếp tục game sau khi tạm dừng
-     */
-    public void resume() {
-        if (STATE_PAUSED.equals(state)) {
-            state = STATE_RUNNING;
-        }
-    }
-
-    /**
-     * Toggle pause/resume
-     */
-    public void togglePause() {
-        if (STATE_RUNNING.equals(state)) {
-            pause();
-        } else if (STATE_PAUSED.equals(state)) {
-            resume();
-        }
-    }
-
-    /**
-     * Chuyển về menu
-     */
-    public void returnToMenu() {
-        state = STATE_MENU;
-    }
-
-    /**
-     * Kiểm tra xem có còn gạch để phá không
-     */
     public boolean hasRemainingBricks() {
         for (Brick brick : bricks) {
             if (!brick.isUnbreakable()) {
@@ -343,16 +351,42 @@ public class GameManager {
     }
 
     /**
-     * Kiểm tra thắng cấp độx`
+     * Tạo thêm bóng phụ (power-up Multi-ball)
      */
-    private void checkLevelComplete() {
-        // Khi không còn bất kỳ viên gạch phá được nào
-        if (!hasRemainingBricks()) {
-            System.out.println("Level " + (curLevel + 1) + " Complete! Score: " + score);
-            nextLevel(); // qua màn kế tiếp (hoặc kết thúc nếu đã hết LEVELS)
+    public void spawnExtraBalls() {
+        if (balls.isEmpty()) return;
+        int currentBallCount = balls.size();
+        for (int i = 0; i < currentBallCount; i++) {
+            Ball sourceBall = balls.get(i);
+
+            Ball newBall = new Ball(
+                    sourceBall.getX(),
+                    sourceBall.getY(),
+                    Constant.BALL_RADIUS,
+                    Constant.BALL_SPEED,
+                    -sourceBall.getDx(),
+                    sourceBall.getDy()
+            );
+
+            balls.add(newBall);
         }
     }
 
+    /**
+     * Xóa tất cả bóng phụ, chỉ giữ lại một quả.
+     */
+    public void removeExtraBalls() {
+        if (balls.size() > 1) {
+            Ball firstBall = balls.get(0);
+            balls.clear();
+            balls.add(firstBall);
+        }
+    }
+
+    // --- Getters ---
+    public List<Ball> getBalls() {
+        return balls;
+    }
 
     public Background getBackground() {
         return background;
@@ -360,10 +394,6 @@ public class GameManager {
 
     public Paddle getPaddle() {
         return paddle;
-    }
-
-    public Ball getBall() {
-        return ball;
     }
 
     public List<Brick> getBricks() {
@@ -386,17 +416,17 @@ public class GameManager {
         return state;
     }
 
-    /**
-     * Kiểm tra xem điểm hiện tại có phải high score không
-     */
-    public boolean isHighScore() {
-        return score > 0; // Có thể tích hợp với HighScoreManager nếu cần
+    public List<Laser> getLasers() {
+        return lasers;
     }
 
-    /**
-     * Lấy điểm hiện tại để hiển thị trong menu
-     */
-    public int getCurrentScore() {
-        return score;
+    // --- Các phương thức quản lý trạng thái game ---
+    public void togglePause() {
+        if (STATE_RUNNING.equals(state)) state = STATE_PAUSED;
+        else if (STATE_PAUSED.equals(state)) state = STATE_RUNNING;
+    }
+
+    public void returnToMenu() {
+        state = STATE_MENU;
     }
 }

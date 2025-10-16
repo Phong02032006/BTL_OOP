@@ -1,17 +1,25 @@
 package Arkanoid.Object;
 
 import Arkanoid.Object.powerup.PowerUp;
+import Arkanoid.Object.Ball;
+import Arkanoid.Object.Laser;
 import Arkanoid.util.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Paddle extends MovableObject {
     private double speed;
     private PowerUp currentPowerUp;
     private Color color;
     private final Image image;
+    private boolean laserEquipped = false;
 
+
+    private List<Ball> tempBalls = new ArrayList<>();
     public Paddle(double x, double y, double width, double height, double speed) {
         super(x, y, width, height, 0, 0);
         this.speed = speed;
@@ -25,15 +33,15 @@ public class Paddle extends MovableObject {
      */
     public void moveLeft(double screenWidth) {
         x -= speed;
-        if (x < 0) {
-            x = 0; // chạm biên trái
+        if (x < Constant.BORDER_LEFT) {
+            x = Constant.BORDER_LEFT;
         }
     }
 
     public void moveRight(double screenWidth) {
         x += speed;
-        if (x + width > screenWidth) {
-            x = screenWidth - width; // chạm biên phải
+        if (x + width > Constant.BORDER_RIGHT) {
+            x = Constant.BORDER_RIGHT - width;
         }
     }
 
@@ -58,6 +66,7 @@ public class Paddle extends MovableObject {
         }
     }
 
+
     @Override
     public void update() {
     }
@@ -76,6 +85,14 @@ public class Paddle extends MovableObject {
     //  Getter / Setter bổ sung
     public double getSpeed() {
         return speed;
+    }
+
+    public boolean isLaserEquipped() {
+        return laserEquipped;
+    }
+
+    public void setLaserEquipped(boolean laserEquipped) {
+        this.laserEquipped = laserEquipped;
     }
 
     public void setSpeed(double speed) {
