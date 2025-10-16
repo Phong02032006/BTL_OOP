@@ -1,6 +1,7 @@
 package Arkanoid.UI;
 
 import Arkanoid.util.Constant;
+import Arkanoid.util.HighScoreManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -18,10 +19,12 @@ public class SimpleMenuScreen extends VBox {
     private Text currentScoreText;
     private Button startButton;
     private Button highScoresButton;
+    private Button settingsButton;
     private Button exitButton;
     
     private Runnable onStart;
     private Runnable onHighScores;
+    private Runnable onSettings;
     private Runnable onExit;
     
     public SimpleMenuScreen() {
@@ -91,7 +94,7 @@ public class SimpleMenuScreen extends VBox {
         highScoreBox.setAlignment(Pos.CENTER);
         
         Text highScoreLabel = createRetroText("HIGH SCORE", Color.ORANGE, 16, true);
-        Text highScoreText = createRetroText("00000", Color.WHITE, 20, true);
+        Text highScoreText = createRetroText(String.format("%05d", HighScoreManager.getHighestScore()), Color.WHITE, 20, true);
         
         highScoreBox.getChildren().addAll(highScoreLabel, highScoreText);
         
@@ -127,6 +130,7 @@ public class SimpleMenuScreen extends VBox {
         // Tạo các menu items với hiệu ứng arrow selection
         startButton = createMenuOption(" 1 PLAYER", true);
         highScoresButton = createMenuOption("  HIGH SCORES", false);
+        settingsButton = createMenuOption("  SETTINGS", false);
         exitButton = createMenuOption("  EXIT", false);
         
         // Button actions
@@ -138,6 +142,10 @@ public class SimpleMenuScreen extends VBox {
             if (onHighScores != null) onHighScores.run();
         });
         
+        settingsButton.setOnAction(e -> {
+            if (onSettings != null) onSettings.run();
+        });
+        
         exitButton.setOnAction(e -> {
             if (onExit != null) onExit.run();
         });
@@ -145,7 +153,7 @@ public class SimpleMenuScreen extends VBox {
         // Hover effects
         setupMenuHoverEffects();
         
-        menuBox.getChildren().addAll(startButton, highScoresButton, exitButton);
+        menuBox.getChildren().addAll(startButton, highScoresButton, settingsButton, exitButton);
         return menuBox;
     }
     
@@ -207,6 +215,25 @@ public class SimpleMenuScreen extends VBox {
         highScoresButton.setOnMouseExited(e -> {
             highScoresButton.setText("  HIGH SCORES");
             highScoresButton.setStyle(
+                "-fx-text-fill: #cccccc;" +
+                "-fx-background-color: transparent;" +
+                "-fx-cursor: hand;"
+            );
+        });
+        
+        // Settings button hover
+        settingsButton.setOnMouseEntered(e -> {
+            settingsButton.setText("► SETTINGS");
+            settingsButton.setStyle(
+                "-fx-text-fill: #ffffff;" +
+                "-fx-background-color: transparent;" +
+                "-fx-cursor: hand;"
+            );
+        });
+        
+        settingsButton.setOnMouseExited(e -> {
+            settingsButton.setText("  SETTINGS");
+            settingsButton.setStyle(
                 "-fx-text-fill: #cccccc;" +
                 "-fx-background-color: transparent;" +
                 "-fx-cursor: hand;"
@@ -279,6 +306,10 @@ public class SimpleMenuScreen extends VBox {
     
     public void setOnHighScores(Runnable action) {
         this.onHighScores = action;
+    }
+    
+    public void setOnSettings(Runnable action) {
+        this.onSettings = action;
     }
     
     public void setOnExit(Runnable action) {
