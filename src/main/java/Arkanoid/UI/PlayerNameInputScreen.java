@@ -6,12 +6,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+
+
 
 /**
  * Màn hình nhập tên người chơi khi đạt điểm cao
@@ -119,7 +122,6 @@ public class PlayerNameInputScreen extends VBox {
         nameTextField.setFont(Font.font("Courier New", FontWeight.BOLD, 20));
         nameTextField.setPrefWidth(300);
         nameTextField.setPrefHeight(40);
-        nameTextField.setMaxLength(15); // Giới hạn 15 ký tự
         nameTextField.setPromptText("Nhập tên...");
         
         // Styling cho TextField

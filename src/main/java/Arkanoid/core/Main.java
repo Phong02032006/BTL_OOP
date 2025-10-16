@@ -228,20 +228,24 @@ public class Main extends Application {
     private void returnToMenu() {
         gm.returnToMenu();
         showMenuScreen();
+        // Cập nhật điểm cao nhất trên menu
+        menuScreen.updateHighScore(HighScoreManager.getHighestScore());
     }
 
     /**
      * Hiển thị màn hình game over
      */
     private void showGameOverScreen() {
-        currentScreen = "GAMEOVER";
-        gameOverScreen.setScore(gm.getScore());
-        root.getChildren().clear();
-        root.getChildren().add(gameOverScreen);
-        
         // Kiểm tra xem có phải điểm cao không
         if (HighScoreManager.isHighScore(gm.getScore())) {
+            // Nếu là điểm cao, hiển thị màn hình nhập tên trực tiếp
             showPlayerNameInputScreen();
+        } else {
+            // Nếu không phải điểm cao, hiển thị màn hình game over bình thường
+            currentScreen = "GAMEOVER";
+            gameOverScreen.setScore(gm.getScore());
+            root.getChildren().clear();
+            root.getChildren().add(gameOverScreen);
         }
     }
 
@@ -271,12 +275,12 @@ public class Main extends Application {
         currentScreen = "NAME_INPUT";
         playerNameInputScreen = new PlayerNameInputScreen(gm.getScore());
         playerNameInputScreen.setOnSubmit(() -> {
-            // Sau khi submit tên, quay về màn hình game over
-            showGameOverScreen();
+            // Sau khi submit tên, quay về màn hình menu chính
+            returnToMenu();
         });
         playerNameInputScreen.setOnSkip(() -> {
-            // Sau khi skip, quay về màn hình game over
-            showGameOverScreen();
+            // Sau khi skip, quay về màn hình menu chính
+            returnToMenu();
         });
         root.getChildren().add(playerNameInputScreen);
     }

@@ -2,6 +2,7 @@ package Arkanoid.UI;
 
 import Arkanoid.util.Constant;
 import Arkanoid.util.SoundManager;
+import Arkanoid.util.SettingsManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
