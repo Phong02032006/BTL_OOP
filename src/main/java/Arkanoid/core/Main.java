@@ -2,7 +2,6 @@ package Arkanoid.core;
 
 import Arkanoid.UI.*;
 import Arkanoid.util.Constant;
-import Arkanoid.util.GameMode;
 import Arkanoid.util.HighScoreManager;
 import Arkanoid.util.SoundManager;
 import javafx.animation.AnimationTimer;
@@ -99,7 +98,7 @@ public class Main extends Application {
     private void initScreens() {
         // Menu Screen
         menuScreen = new SimpleMenuScreen();
-        menuScreen.setOnStart(mode -> startGame(mode));
+        menuScreen.setOnStart(() -> startGame());
         menuScreen.setOnHighScores(() -> showHighScoreScreen());
         menuScreen.setOnSettings(() -> showSettingsScreen());
         menuScreen.setOnExit(() -> Platform.exit());
@@ -181,11 +180,9 @@ public class Main extends Application {
     /**
      * Bắt đầu game mới
      */
-    private void startGame(SimpleMenuScreen.GameMode mode) {
+    private void startGame() {
         currentScreen = "GAME";
-        gm.start(mode == SimpleMenuScreen.GameMode.FUNNY
-                ? GameMode.FUNNY
-                : GameMode.NORMAL);  // ép kiểu về enum trong GameManager
+        gm.start();
         root.getChildren().clear();
         root.getChildren().add(canvas);
         canvas.requestFocus();
