@@ -18,7 +18,7 @@ public class HighScoreManager {
     /**
      * Lớp đại diện cho một entry điểm cao
      */
-    public static class HighScoreEntry implements Comparable<HighScoreEntry>, Serializable {
+    public static class HighScoreEntry implements Comparable<HighScoreEntry> {
         private String playerName;
         private int score;
         private long timestamp;
