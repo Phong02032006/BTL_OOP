@@ -99,7 +99,7 @@ public class GameManager {
         // Bắt đầu với một quả bóng duy nhất (sau khi paddle đã tồn tại)
         addNewBallOnPaddle();
 
-        // Tinh chỉnh theo mode (gọi CUỐI để tránh NPE)
+        // Tinh chỉnh theo mode  tránh      NullPointerException
         applyModeTuning();
     }
 
