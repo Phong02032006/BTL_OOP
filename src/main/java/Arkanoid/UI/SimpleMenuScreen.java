@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import java.util.function.Consumer;
 
 /**
  * Màn hình Menu đơn giản (không tích hợp high score)
@@ -27,6 +28,10 @@ public class SimpleMenuScreen extends VBox {
     private Runnable onHighScores;
     private Runnable onSettings;
     private Runnable onExit;
+
+    public enum GameMode { NORMAL, FUNNY }
+    private Consumer<GameMode> onStartWithMode;
+    private ModeSelectPane modeSelectPane;
 
     public SimpleMenuScreen() {
         setupUI();
@@ -134,9 +139,15 @@ public class SimpleMenuScreen extends VBox {
         settingsButton = createMenuOption("  SETTINGS", false);
         exitButton = createMenuOption("  EXIT", false);
 
+        modeSelectPane = new ModeSelectPane(this);
+        modeSelectPane.setVisible(false);
+        modeSelectPane.setManaged(false);
+        menuBox.getChildren().add(modeSelectPane);
+
         // Button actions
         startButton.setOnAction(e -> {
-            if (onStart != null) onStart.run();
+            setMainMenuVisible(false);    // NEW
+            modeSelectPane.show();        // NEW
         });
 
         highScoresButton.setOnAction(e -> {
@@ -158,7 +169,7 @@ public class SimpleMenuScreen extends VBox {
         return menuBox;
     }
 
-    private Button createMenuOption(String text, boolean isSelected) {
+    public static Button createMenuOption(String text, boolean isSelected) {
         Button button = new Button(text);
         button.setFont(Font.font("Courier New", FontWeight.BOLD, 18));
         button.setPrefWidth(200);
@@ -279,7 +290,7 @@ public class SimpleMenuScreen extends VBox {
         return footerBox;
     }
 
-    private Text createRetroText(String text, Color color, int size, boolean bold) {
+    public static Text createRetroText(String text, Color color, int size, boolean bold) {
         Text textNode = new Text(text);
         FontWeight weight = bold ? FontWeight.BOLD : FontWeight.NORMAL;
         textNode.setFont(Font.font("Courier New", weight, size));
@@ -310,6 +321,13 @@ public class SimpleMenuScreen extends VBox {
         }
     }
 
+    private void setMainMenuVisible(boolean visible) { // NEW
+        startButton.setVisible(visible);   startButton.setManaged(visible);
+        highScoresButton.setVisible(visible); highScoresButton.setManaged(visible);
+        settingsButton.setVisible(visible);   settingsButton.setManaged(visible);
+        exitButton.setVisible(visible);       exitButton.setManaged(visible);
+    }
+
     public void setOnStart(Runnable action) {
         this.onStart = action;
     }
@@ -325,5 +343,17 @@ public class SimpleMenuScreen extends VBox {
     public void setOnExit(Runnable action) {
         this.onExit = action;
     }
+
+    public void setOnStart(Consumer<GameMode> action) {
+        this.onStartWithMode = action;
+    }
+    public Consumer<GameMode> getOnStartWithMode() {
+        return onStartWithMode;
+    }
+    public void showMainMenu() {
+        setMainMenuVisible(true);
+        if (modeSelectPane != null) modeSelectPane.hide();
+    }
+
 }
 
