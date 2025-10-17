@@ -62,41 +62,6 @@ public class GameManager {
     private boolean movingLeft = false;
     private boolean movingRight = false;
 
-//    public void start(GameMode mode) {
-//        this.gameMode = mode;
-//        addNewBallOnPaddle();
-//        applyModeTuning(); // gọi tinh chỉnh theo mode
-//    }
-//
-//
-//    public void start() {
-//        start(GameMode.NORMAL);
-//        SoundManager.playBackground();
-//        background = new Background("/images/background.png");
-//        paddle = new Paddle(width / 2.0 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
-//        curLevel = 0;
-//
-//        bricks = LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
-//        powerUps.clear();
-//        activePowerUps.clear();
-//
-//        score = 0;
-//        lives = 3;
-//        state = STATE_RUNNING;
-//
-//        // Bắt đầu với một quả bóng duy nhất
-//        addNewBallOnPaddle();
-//    }
-//
-//    public void restart() {
-//        SoundManager.stopBackground();
-//        start(gameMode);
-//        movingLeft = false;
-//        movingRight = false;
-//        SoundManager.playBackground();
-//        System.out.println("🔁 Game restarted!");
-//    }
-
     public void start(GameMode mode) {
         this.gameMode = mode;
 
@@ -345,19 +310,27 @@ public class GameManager {
     private void nextLevel() {
         curLevel++;
         if (curLevel < LEVELS.length) {
-            // Xóa hết các hiệu ứng và power-up cũ
+            // Xóa hết hiệu ứng/power-up cũ
             activePowerUps.forEach(pu -> pu.removeEffect(paddle, balls.isEmpty() ? null : balls.get(0)));
             activePowerUps.clear();
             powerUps.clear();
 
+            // DỌN LASER & RESET COOLDOWN (đảm bảo không còn đạn sót khi sang màn)
+            lasers.clear();
+            lastLaserFireTime = 0;
+
             // Tải màn mới
             bricks = LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
 
-            // Reset paddle và bóng
+            // Reset vị trí paddle
             paddle.setX(width / 2.0 - Constant.PADDLE_WIDTH / 2.0);
             paddle.setY(height - 30);
 
+            // Tạo lại bóng mới
             addNewBallOnPaddle();
+
+            // Áp dụng lại chế độ: FUNNY sẽ bật laser lại ở màn mới
+            applyModeTuning();
 
             System.out.println("Level " + (curLevel + 1) + " start!");
         } else {
