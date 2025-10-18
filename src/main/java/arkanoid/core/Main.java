@@ -107,6 +107,7 @@ public class Main extends Application {
         pauseMenu.setOnResume(() -> resumeGame());
         pauseMenu.setOnRestart(() -> restartGame());
         pauseMenu.setOnMainMenu(() -> returnToMenu());
+        pauseMenu.setOnSettings(() -> showSettingsScreen());
 
         // Game Over Screen
         gameOverScreen = new SimpleGameOverScreen();

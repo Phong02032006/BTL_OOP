@@ -19,7 +19,7 @@ public class GameManager {
     private static GameManager instance;
     private boolean ballLaunched;
     private int curLevel;
-    private final String[] LEVELS = {"level1.txt", "level2.txt", "level3.txt", "level4.txt"};
+    private final String[] LEVELS = {"level1.txt", "level2.txt", "level3.txt"};
     private final String[] FUNNY_LEVELS = {"level4.txt", "level5.txt", "level6.txt", "level7.txt"};
     private final List<Laser> lasers = new ArrayList<>();
     private static final long LASER_COOLDOWN = 300;
