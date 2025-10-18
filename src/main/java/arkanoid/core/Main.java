@@ -247,7 +247,7 @@ public class Main extends Application {
     }
 
     /**
-     * Hiển thị màn hình chọn chế độ chơi
+     * Mode show.
      */
     private void showModeSelectionScreen() {
         currentScreen = "MODE_SELECTION";
@@ -256,7 +256,7 @@ public class Main extends Application {
     }
 
     /**
-     * Hiển thị màn hình Settings
+     * Settings.
      */
     private void showSettingsScreen() {
         currentScreen = "SETTINGS";
@@ -265,7 +265,7 @@ public class Main extends Application {
     }
 
     /**
-     * Hiển thị màn hình High Score
+     * High Score.
      */
     private void showHighScoreScreen() {
         currentScreen = "HIGHSCORES";
@@ -275,7 +275,7 @@ public class Main extends Application {
     }
 
     /**
-     * Hiển thị màn hình nhập tên người chơi
+     * Name input.
      */
     private void showPlayerNameInputScreen() {
         currentScreen = "NAME_INPUT";

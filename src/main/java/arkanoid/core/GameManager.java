@@ -70,22 +70,21 @@ public class GameManager {
         }
         SoundManager.playBackground();
 
-        // Reset tất cả trạng thái về ban đầu
+        // Reset
         lasers.clear();
         lastLaserFireTime = 0;
         ballLaunched = false;
         movingLeft = false;
         movingRight = false;
-        curLevel = 0; // Luôn bắt đầu từ màn đầu tiên (chỉ số 0)
+        curLevel = 0;
 
-        // Tạo mới các đối tượng game
+        //create object
         background = new Background("/images/background.png");
         paddle = new Paddle(
                 width / 2.0 - 50, height - 30,
                 Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED
         );
 
-        // 2. Tải level đầu tiên từ bộ level đã chọn
         bricks = LevelLoader.loadLevel(levelsToUse[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT, gameMode);
 
         powerUps.clear();
@@ -114,7 +113,7 @@ public class GameManager {
         }
     }
 
-    // Nhận input
+    // input
     public void onKeyPressed(String key) {
         switch (key) {
             case "LEFT":
@@ -396,9 +395,6 @@ public class GameManager {
         return false;
     }
 
-    /**
-     * Tạo thêm bóng phụ (power-up Multi-ball)
-     */
     public void spawnExtraBalls() {
         if (balls.isEmpty()) return;
         int currentBallCount = balls.size();
@@ -418,9 +414,7 @@ public class GameManager {
         }
     }
 
-    /**
-     * Xóa tất cả bóng phụ, chỉ giữ lại một quả.
-     */
+
     public void removeExtraBalls() {
         if (balls.size() > 1) {
             Ball firstBall = balls.get(0);
@@ -429,7 +423,7 @@ public class GameManager {
         }
     }
 
-    // --- Getters ---
+    //  Getters
     public GameMode getGameMode() {
         return gameMode;
     }

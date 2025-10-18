@@ -2,6 +2,7 @@ package arkanoid.ui;
 
 import arkanoid.util.Constant;
 import arkanoid.util.HighScoreManager;
+import arkanoid.util.SoundManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -14,7 +15,7 @@ import javafx.scene.text.Text;
 import java.util.List;
 
 /**
- * Màn hình High Score hiển thị danh sách điểm cao
+ * High Score.
  */
 public class HighScoreScreen extends VBox {
 
@@ -30,13 +31,13 @@ public class HighScoreScreen extends VBox {
     }
 
     private void setupUI() {
-        // Thiết lập VBox
+        // VBox
         this.setAlignment(Pos.TOP_CENTER);
         this.setSpacing(20);
         this.setPadding(new Insets(40));
         this.setPrefSize(Constant.SCREEN_WIDTH, Constant.SCREEN_HEIGHT);
 
-        // Background đen như màn hình arcade
+        // Background arcade
         BackgroundFill backgroundFill = new BackgroundFill(
                 Color.BLACK,
                 CornerRadii.EMPTY,
@@ -44,13 +45,10 @@ public class HighScoreScreen extends VBox {
         );
         this.setBackground(new Background(backgroundFill));
 
-        // Tiêu đề
         VBox titleSection = createTitleSection();
 
-        // Phần danh sách điểm cao
         VBox scoresSection = createScoresSection();
 
-        // Nút điều khiển
         VBox controlSection = createControlSection();
 
         this.getChildren().addAll(titleSection, scoresSection, controlSection);
@@ -110,13 +108,15 @@ public class HighScoreScreen extends VBox {
         VBox controlBox = new VBox(20);
         controlBox.setAlignment(Pos.CENTER);
 
-        // Nút Clear All Scores
         clearButton = createControlButton("XÓA TẤT CẢ ĐIỂM");
-        clearButton.setOnAction(e -> clearAllScores());
+        clearButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
+            clearAllScores();
+        });
 
-        // Nút Quay lại
         backButton = createControlButton("QUAY LẠI");
         backButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onBack != null) onBack.run();
         });
 
@@ -176,7 +176,7 @@ public class HighScoreScreen extends VBox {
     }
 
     /**
-     * Tải và hiển thị danh sách điểm cao
+     * high score list.
      */
     private void loadHighScores() {
         scoreListContainer.getChildren().clear();
@@ -195,21 +195,16 @@ public class HighScoreScreen extends VBox {
             scoreListContainer.getChildren().add(scoreRow);
         }
 
-        // Thêm các dòng trống nếu chưa đủ 10 điểm
         for (int i = scores.size(); i < 10; i++) {
             HBox emptyRow = createEmptyScoreRow(i + 1);
             scoreListContainer.getChildren().add(emptyRow);
         }
     }
 
-    /**
-     * Tạo một dòng điểm cao
-     */
     private HBox createScoreRow(int rank, String playerName, int score) {
         HBox row = new HBox(50);
         row.setAlignment(Pos.CENTER);
 
-        // Màu sắc khác nhau cho top 3
         Color rankColor = getRankColor(rank);
         Color nameColor = rank <= 3 ? Color.GOLD : Color.WHITE;
         Color scoreColor = rank <= 3 ? Color.GOLD : Color.WHITE;
@@ -222,9 +217,6 @@ public class HighScoreScreen extends VBox {
         return row;
     }
 
-    /**
-     * Tạo một dòng trống
-     */
     private HBox createEmptyScoreRow(int rank) {
         HBox row = new HBox(50);
         row.setAlignment(Pos.CENTER);
@@ -254,17 +246,14 @@ public class HighScoreScreen extends VBox {
     }
 
     /**
-     * Xóa tất cả điểm cao
+     * clear all.
      */
     private void clearAllScores() {
         HighScoreManager.clearHighScores();
         loadHighScores();
-        System.out.println("Đã xóa tất cả điểm cao");
+        System.out.println("Clear all");
     }
 
-    /**
-     * Làm mới danh sách điểm cao (được gọi từ bên ngoài)
-     */
     public void refreshHighScores() {
         loadHighScores();
     }

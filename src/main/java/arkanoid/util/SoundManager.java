@@ -65,9 +65,9 @@ public class SoundManager {
     }
 
     /**
-     * Thiết lập âm lượng nhạc nền
+     * set bg music.
      *
-     * @param volume Âm lượng từ 0.0 đến 1.0
+     * @param volume from 0.0 to 1.0
      */
     public static void setMusicVolume(double volume) {
         musicVolume = Math.max(0.0, Math.min(1.0, volume));
