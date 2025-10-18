@@ -1,23 +1,18 @@
 package arkanoid.object;
 
-import arkanoid.object.powerup.PowerUp;
+
 import arkanoid.util.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Paddle extends MovableObject {
     private double speed;
-    private PowerUp currentPowerUp;
     private Color color;
     private final Image image;
     private boolean laserEquipped = false;
 
-
-    private List<Ball> tempBalls = new ArrayList<>();
     public Paddle(double x, double y, double width, double height, double speed) {
         super(x, y, width, height, 0, 0);
         this.speed = speed;
@@ -46,23 +41,7 @@ public class Paddle extends MovableObject {
     /**
      * Áp dụng hiệu ứng PowerUp (nếu có)
      */
-    public void applyPowerUp(PowerUp powerUp) {
-        this.currentPowerUp = powerUp;
-        if (powerUp != null) {
-            powerUp.applyEffect(this, null);
-        }
-    }
 
-    public PowerUp getCurrentPowerUp() {
-        return currentPowerUp;
-    }
-
-    public void removeCurrentPowerUp() {
-        if (currentPowerUp != null) {
-            currentPowerUp.removeEffect(this, null);
-            currentPowerUp = null;
-        }
-    }
 
 
     @Override

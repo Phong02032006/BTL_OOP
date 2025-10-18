@@ -18,7 +18,7 @@ public class HighScoreManager {
     /**
      * Lớp đại diện cho một entry điểm cao
      */
-    public static class HighScoreEntry implements Comparable<HighScoreEntry> {
+    public static class HighScoreEntry implements Comparable<HighScoreEntry>, Serializable {
         private String playerName;
         private int score;
         private long timestamp;
@@ -49,12 +49,10 @@ public class HighScoreManager {
 
         @Override
         public int compareTo(HighScoreEntry other) {
-            // Sắp xếp theo điểm từ cao đến thấp
             int scoreCompare = Integer.compare(other.score, this.score);
             if (scoreCompare != 0) {
                 return scoreCompare;
             }
-            // Nếu điểm bằng nhau, sắp xếp theo thời gian (cũ hơn trước)
             return Long.compare(this.timestamp, other.timestamp);
         }
 
@@ -183,29 +181,11 @@ public class HighScoreManager {
     }
 
     /**
-     * Xóa tất cả điểm cao (reset)
+     *  reset
      */
     public static void clearHighScores() {
         highScores.clear();
         saveHighScores();
-        System.out.println("Đã xóa tất cả điểm cao");
-    }
-
-    /**
-     * Tạo một số điểm cao mẫu để test
-     */
-    public static void createSampleData() {
-        if (highScores.isEmpty()) {
-            String[] names = {"PLAYER1", "GAMER", "MASTER", "PRO", "EXPERT", "LEGEND", "CHAMP", "HERO", "ACE", "BOSS"};
-            int[] scores = {50000, 45000, 40000, 35000, 30000, 25000, 20000, 15000, 10000, 5000};
-
-            for (int i = 0; i < names.length; i++) {
-                highScores.add(new HighScoreEntry(names[i], scores[i]));
-            }
-
-            Collections.sort(highScores);
-            saveHighScores();
-            System.out.println("Đã tạo " + highScores.size() + " điểm cao mẫu");
-        }
+        System.out.println("Erase all");
     }
 }

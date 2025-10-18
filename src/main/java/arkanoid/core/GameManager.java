@@ -315,14 +315,13 @@ public class GameManager {
             System.out.println("Level " + (curLevel + 1) + " start!");
 
         } else {
-            // --- Nếu đã hết màn của chế độ hiện tại -> Người chơi chiến thắng ---
             state = Constant.STATE_GAME_OVER;
             System.out.println("All levels for " + gameMode + " mode cleared! Final Score: " + score);
         }
     }
 
     /**
-     * Xử lý khi người chơi mất một mạng
+     * Lose life.
      */
     private void loseLife() {
         lives--;
