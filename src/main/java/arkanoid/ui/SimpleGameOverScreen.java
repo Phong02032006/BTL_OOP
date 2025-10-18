@@ -1,6 +1,7 @@
 package arkanoid.ui;
 
 import arkanoid.util.Constant;
+import arkanoid.util.SoundManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -75,10 +76,12 @@ public class SimpleGameOverScreen extends VBox {
         mainMenuButton = createRetroButton("MAIN MENU");
 
         restartButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onRestart != null) onRestart.run();
         });
 
         mainMenuButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onMainMenu != null) onMainMenu.run();
         });
 

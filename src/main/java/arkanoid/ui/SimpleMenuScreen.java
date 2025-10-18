@@ -2,6 +2,7 @@ package arkanoid.ui;
 
 import arkanoid.util.Constant;
 import arkanoid.util.HighScoreManager;
+import arkanoid.util.SoundManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -135,18 +136,22 @@ public class SimpleMenuScreen extends VBox {
 
         // Button actions
         startButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onStart != null) onStart.run();
         });
 
         highScoresButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onHighScores != null) onHighScores.run();
         });
 
         settingsButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onSettings != null) onSettings.run();
         });
 
         exitButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onExit != null) onExit.run();
         });
 

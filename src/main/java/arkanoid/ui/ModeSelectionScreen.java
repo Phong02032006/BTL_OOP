@@ -1,6 +1,7 @@
 package arkanoid.ui;
 
 import arkanoid.util.Constant;
+import arkanoid.util.SoundManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -47,12 +48,15 @@ public class ModeSelectionScreen extends VBox {
 
         // Gán hành động cho các nút
         normalModeButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onNormalModeSelected != null) onNormalModeSelected.run();
         });
         funnyModeButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onFunnyModeSelected != null) onFunnyModeSelected.run();
         });
-        backButton.setOnAction(e -> { // << 4. GÁN HÀNH ĐỘNG CHO NÚT "BACK"
+        backButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
             if (onBackSelected != null) onBackSelected.run();
         });
 
@@ -60,7 +64,7 @@ public class ModeSelectionScreen extends VBox {
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.getChildren().addAll(normalModeButton, funnyModeButton, backButton); // << THÊM NÚT BACK VÀO ĐÂY
 
-        // Dùng 2 khoảng trống để đẩy hộp nút vào giữa
+
         Region spacer1 = new Region();
         Region spacer2 = new Region();
         VBox.setVgrow(spacer1, Priority.ALWAYS);
