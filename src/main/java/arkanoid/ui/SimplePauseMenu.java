@@ -19,9 +19,11 @@ public class SimplePauseMenu extends VBox {
     private Button resumeButton;
     private Button restartButton;
     private Button mainMenuButton;
+    private Button settingsButton;
 
     private Runnable onResume;
     private Runnable onRestart;
+    private Runnable onSettings;
     private Runnable onMainMenu;
 
     public SimplePauseMenu() {
@@ -63,12 +65,18 @@ public class SimplePauseMenu extends VBox {
         // Buttons
         resumeButton = createRetroButton("RESUME");
         restartButton = createRetroButton("RESTART");
+        settingsButton = createRetroButton("SETTINGS");
         mainMenuButton = createRetroButton("MAIN MENU");
 
         // Button actions
         resumeButton.setOnAction(e -> {
             SoundManager.playSound("clicking.wav");
             if (onResume != null) onResume.run();
+        });
+
+        settingsButton.setOnAction(e -> {
+            SoundManager.playSound("clicking.wav");
+            if (onSettings != null) onSettings.run();
         });
 
         restartButton.setOnAction(e -> {
@@ -84,8 +92,7 @@ public class SimplePauseMenu extends VBox {
         // Add to layout
         VBox buttonBox = new VBox(15);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(resumeButton, restartButton, mainMenuButton);
-
+        buttonBox.getChildren().addAll(resumeButton, restartButton, settingsButton, mainMenuButton);
         this.getChildren().addAll(title, subtitle, buttonBox);
     }
 
@@ -128,6 +135,10 @@ public class SimplePauseMenu extends VBox {
         );
 
         return button;
+    }
+
+    public void setOnSettings(Runnable action) {
+        this.onSettings = action;
     }
 
     public void setOnResume(Runnable action) {
