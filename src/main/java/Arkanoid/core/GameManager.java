@@ -1,5 +1,7 @@
 package Arkanoid.core;
 
+import Arkanoid.util.GameMode;
+
 import Arkanoid.Object.*;
 import Arkanoid.Object.brick.Brick;
 import Arkanoid.Object.powerup.PowerUp;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GameManager {
+    private GameMode gameMode = GameMode.NORMAL;
     private static GameManager instance;
     private boolean ballLaunched;
     private int curLevel;
@@ -59,32 +62,83 @@ public class GameManager {
     private boolean movingLeft = false;
     private boolean movingRight = false;
 
-    public void start() {
+    public void start(GameMode mode) {
+        this.gameMode = mode;
+
+        // Dừng nhạc cũ (nếu đang phát) rồi phát lại
+        try { SoundManager.stopBackground(); } catch (Exception ignored) {}
         SoundManager.playBackground();
+
+        // Xóa laser cũ & reset cooldown
+        lasers.clear();
+        lastLaserFireTime = 0;
+
+        // Reset state cơ bản
+        ballLaunched = false;
+        movingLeft = false;
+        movingRight = false;
+        if (this.gameMode == GameMode.FUNNY) {
+            curLevel = 3; // Funny Mode bắt đầu từ màn 4 (index 3)
+        } else {
+            curLevel = 0; // Normal Mode bắt đầu từ màn 1 (index 0)
+        }
+
+        // Tạo mới scene/game objects
         background = new Background("/images/background.png");
-        paddle = new Paddle(width / 2.0 - 50, height - 30, Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED);
-        curLevel = 0;
+        paddle = new Paddle(
+                width / 2.0 - 50, height - 30,
+                Constant.PADDLE_WIDTH, Constant.PADDLE_HEIGHT, Constant.PADDLE_SPEED
+        );
 
         bricks = LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
+
         powerUps.clear();
         activePowerUps.clear();
+        balls.clear();
 
         score = 0;
         lives = 3;
         state = STATE_RUNNING;
 
-        // Bắt đầu với một quả bóng duy nhất
+        // Bắt đầu với một quả bóng duy nhất (sau khi paddle đã tồn tại)
         addNewBallOnPaddle();
+
+        // Tinh chỉnh theo mode  tránh      NullPointerException
+        applyModeTuning();
+    }
+
+    // Wrapper giữ tương thích cho nơi gọi cũ
+    public void start() {
+        start(GameMode.NORMAL);
     }
 
     public void restart() {
-        SoundManager.stopBackground();
-        start();
-        movingLeft = false;
-        movingRight = false;
-        SoundManager.playBackground();
+        // Giữ nguyên chế độ đang chơi
+        start(gameMode);
         System.out.println("🔁 Game restarted!");
     }
+
+    private void tuneBall(Ball ball) {
+        if (gameMode == GameMode.FUNNY) {
+            ball.setSpeed(Constant.BALL_SPEED * 1.15);
+        }
+    }
+
+    private void applyModeTuning() {
+        if (paddle == null) return; // an toàn
+
+        if (gameMode == GameMode.FUNNY) {
+            // Ví dụ FUNNY: bật laser + tăng nhẹ speed ban đầu
+            try { paddle.setLaserEquipped(true); } catch (Exception ignored) {}
+            if (!balls.isEmpty()) {
+                try { balls.get(0).setSpeed(Constant.BALL_SPEED * 1.15); } catch (Exception ignored) {}
+            }
+        } else {
+            // NORMAL: tắt laser, giữ mặc định
+            try { paddle.setLaserEquipped(false); } catch (Exception ignored) {}
+        }
+    }
+
 
     // Nhận input
     public void onKeyPressed(String key) {
@@ -263,27 +317,40 @@ public class GameManager {
         }
     }
 
+    // Trong file GameManager.java, thay thế hoàn toàn phương thức nextLevel() cũ
+
     private void nextLevel() {
-        curLevel++;
-        if (curLevel < LEVELS.length) {
-            // Xóa hết các hiệu ứng và power-up cũ
+        curLevel++; // Chuyển sang index màn tiếp theo
+
+        boolean hasMoreLevels;
+        if (gameMode == GameMode.NORMAL) {
+            hasMoreLevels = (curLevel < 3);
+        } else {
+            hasMoreLevels = (curLevel < LEVELS.length);
+        }
+
+        if (hasMoreLevels) {
+            // Xóa hết hiệu ứng/power-up cũ
             activePowerUps.forEach(pu -> pu.removeEffect(paddle, balls.isEmpty() ? null : balls.get(0)));
             activePowerUps.clear();
             powerUps.clear();
+            lasers.clear();
+            lastLaserFireTime = 0;
 
             // Tải màn mới
             bricks = LevelLoader.loadLevel(LEVELS[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT);
 
-            // Reset paddle và bóng
+            // Reset vị trí paddle và bóng
             paddle.setX(width / 2.0 - Constant.PADDLE_WIDTH / 2.0);
             paddle.setY(height - 30);
-
             addNewBallOnPaddle();
+            applyModeTuning();
 
             System.out.println("Level " + (curLevel + 1) + " start!");
         } else {
+            // Hết màn của mode hiện tại -> Game Over (chiến thắng)
             state = STATE_GAME_OVER;
-            System.out.println("All levels cleared! Final Score: " + score);
+            System.out.println("All levels for " + gameMode + " mode cleared! Final Score: " + score);
         }
     }
 
@@ -297,6 +364,8 @@ public class GameManager {
             // Xóa hết các hiệu ứng
             activePowerUps.forEach(pu -> pu.removeEffect(paddle, null));
             activePowerUps.clear();
+            lasers.clear(); // xoa laser dang bay
+            lastLaserFireTime = 0; // dat lai cooldown de no khong ban ngay lap tuc
             // Tạo lại một quả bóng mới
             addNewBallOnPaddle();
         }
@@ -325,6 +394,7 @@ public class GameManager {
         double ballX = paddle.getX() + paddle.getWidth() / 2 - Constant.BALL_RADIUS;
         double ballY = paddle.getY() - Constant.BALL_RADIUS * 2 - 2;
         Ball newBall = new Ball(ballX, ballY, Constant.BALL_RADIUS, Constant.BALL_SPEED, 0, -1);
+        tuneBall(newBall);
         balls.add(newBall);
     }
 
@@ -397,6 +467,8 @@ public class GameManager {
     }
 
     // --- Getters ---
+    public GameMode getGameMode() { return gameMode; }
+
     public List<Ball> getBalls() {
         return balls;
     }

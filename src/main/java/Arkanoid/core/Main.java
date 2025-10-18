@@ -2,6 +2,7 @@ package Arkanoid.core;
 
 import Arkanoid.UI.*;
 import Arkanoid.util.Constant;
+import Arkanoid.util.GameMode;
 import Arkanoid.util.HighScoreManager;
 import Arkanoid.util.SoundManager;
 import javafx.animation.AnimationTimer;
@@ -31,6 +32,7 @@ public class Main extends Application {
     private SettingsScreen settingsScreen;
     private HighScoreScreen highScoreScreen;
     private PlayerNameInputScreen playerNameInputScreen;
+    private ModeSelectionScreen modeSelectionScreen;
 
     private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER, SETTINGS, HIGHSCORES, NAME_INPUT
 
@@ -98,7 +100,7 @@ public class Main extends Application {
     private void initScreens() {
         // Menu Screen
         menuScreen = new SimpleMenuScreen();
-        menuScreen.setOnStart(() -> startGame());
+        menuScreen.setOnStart(() -> showModeSelectionScreen());
         menuScreen.setOnHighScores(() -> showHighScoreScreen());
         menuScreen.setOnSettings(() -> showSettingsScreen());
         menuScreen.setOnExit(() -> Platform.exit());
@@ -121,6 +123,11 @@ public class Main extends Application {
         // High Score Screen
         highScoreScreen = new HighScoreScreen();
         highScoreScreen.setOnBack(() -> returnToMenu());
+
+        modeSelectionScreen = new ModeSelectionScreen();
+        modeSelectionScreen.setOnNormalModeSelected(() -> startGame(GameMode.NORMAL));
+        modeSelectionScreen.setOnFunnyModeSelected(() -> startGame(GameMode.FUNNY));
+        modeSelectionScreen.setOnBackSelected(() -> showMenuScreen());
     }
 
     /**
@@ -180,9 +187,9 @@ public class Main extends Application {
     /**
      * Bắt đầu game mới
      */
-    private void startGame() {
+    private void startGame(GameMode mode) {
         currentScreen = "GAME";
-        gm.start();
+        gm.start(mode);
         root.getChildren().clear();
         root.getChildren().add(canvas);
         canvas.requestFocus();
@@ -247,6 +254,15 @@ public class Main extends Application {
             root.getChildren().clear();
             root.getChildren().add(gameOverScreen);
         }
+    }
+
+    /**
+     * Hiển thị màn hình chọn chế độ chơi
+     */
+    private void showModeSelectionScreen() {
+        currentScreen = "MODE_SELECTION";
+        root.getChildren().clear();
+        root.getChildren().add(modeSelectionScreen);
     }
 
     /**

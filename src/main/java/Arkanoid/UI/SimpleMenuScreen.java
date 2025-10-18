@@ -326,4 +326,3 @@ public class SimpleMenuScreen extends VBox {
         this.onExit = action;
     }
 }
-
