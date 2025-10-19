@@ -75,34 +75,37 @@ public class LevelLoader {
                     }
 
                     if (brick != null) {
-                        if (!brick.isUnbreakable() && Math.random() < 0.2) {
-                            double px = x + brickWidth / 2 - Constant.POWERUP_SIZE / 2;
-                            double py = y + brickHeight / 2 - Constant.POWERUP_SIZE / 2;
-
-                            PowerUp powerUp = null;
-
+                        if (!brick.isUnbreakable()) {
                             if (mode == GameMode.FUNNY) {
-                                if (Math.random() < 0.8) {
+                                double px = x + brickWidth / 2 - Constant.POWERUP_SIZE / 2;
+                                double py = y + brickHeight / 2 - Constant.POWERUP_SIZE / 2;
+                                PowerUp powerUp = new DoubleBall(px, py);
+                                if (Math.random() < 0.95) {
                                     powerUp = new DoubleBall(px, py);
                                 } else {
                                     powerUp = new ExpandedPaddlePowerUp(px, py);
                                 }
-                            } else {
-                                // Nếu là Normal Mode, giữ nguyên logic random cũ
-                                double r = Math.random();
-                                if (r < 0.20) {
-                                    powerUp = new LaserPowerUp(px, py);
-                                } else if (r < 0.40) {
-                                    powerUp = new ExpandedPaddlePowerUp(px, py);
-                                } else if (r < 0.60) {
-                                    powerUp = new FastBallPowerUp(px, py);
-                                } else {
-                                    powerUp = new DoubleBall(px, py);
+                                brick.setPowerUp(powerUp);
+                            }
+                            else {
+                                if (Math.random() < 0.2) {
+                                    double px = x + brickWidth / 2 - Constant.POWERUP_SIZE / 2;
+                                    double py = y + brickHeight / 2 - Constant.POWERUP_SIZE / 2;
+                                    PowerUp powerUp = null;
+                                    double r = Math.random();
+                                    if (r < 0.20) {
+                                        powerUp = new LaserPowerUp(px, py);
+                                    } else if (r < 0.40) {
+                                        powerUp = new ExpandedPaddlePowerUp(px, py);
+                                    } else if (r < 0.60) {
+                                        powerUp = new FastBallPowerUp(px, py);
+                                    } else {
+                                        powerUp = new DoubleBall(px, py);
+                                    }
+                                    brick.setPowerUp(powerUp);
                                 }
                             }
-                            brick.setPowerUp(powerUp);
                         }
-
                         bricks.add(brick);
                     }
                 }

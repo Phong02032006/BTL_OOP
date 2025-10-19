@@ -36,7 +36,9 @@ public class DoubleBall extends PowerUp {
     @Override
     public void removeEffect(Paddle paddle, Ball mainBall) {
         setActive(false);
-        GameManager.getInstance().removeExtraBalls();
+        if (!GameManager.getInstance().hasActiveMultiBallPowerUp()) {
+            GameManager.getInstance().removeExtraBalls();
+        }
     }
 
 

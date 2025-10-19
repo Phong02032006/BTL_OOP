@@ -1,5 +1,6 @@
 package arkanoid.core;
 
+import arkanoid.object.powerup.DoubleBall;
 import arkanoid.util.GameMode;
 
 import arkanoid.object.*;
@@ -389,6 +390,16 @@ public class GameManager {
     public boolean hasRemainingBricks() {
         for (Brick brick : bricks) {
             if (!brick.isUnbreakable()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasActiveMultiBallPowerUp() {
+        for (PowerUp pu : activePowerUps) {
+            // Kiểm tra xem power-up trong danh sách có phải là loại DoubleBall không
+            if (pu instanceof DoubleBall) {
                 return true;
             }
         }
