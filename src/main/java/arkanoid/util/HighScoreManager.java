@@ -82,12 +82,17 @@ public class HighScoreManager {
         highScores.add(newEntry);
         Collections.sort(highScores);
 
-        // Giữ chỉ top 10
         if (highScores.size() > MAX_HIGHSCORES) {
             highScores = highScores.subList(0, MAX_HIGHSCORES);
         }
 
-        saveHighScores();
+        /*
+          new thread to save highscores so that the main thread(JavaFX Application Thread)
+          can continute handle UI updates, animations, and user input without interruption.
+         */
+        new Thread(() -> {
+            saveHighScores();
+        }).start();
 
         // Kiểm tra xem điểm có trong top 10 không
         return highScores.contains(newEntry);
@@ -149,7 +154,6 @@ public class HighScoreManager {
     /**
      * Tải điểm cao từ file
      */
-    @SuppressWarnings("unchecked")
     private static void loadHighScores() {
         try {
             String userHome = System.getProperty("user.home");
@@ -185,7 +189,14 @@ public class HighScoreManager {
      */
     public static void clearHighScores() {
         highScores.clear();
-        saveHighScores();
+
+        /*
+          new thread to save the file so that the main thread(JavaFX Application Thread)
+          can continute handle UI updates, animations, and user input without interruption.
+         */
+        new Thread(() -> {
+            saveHighScores();
+        }).start();
         System.out.println("Erase all");
     }
 }
