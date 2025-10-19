@@ -97,13 +97,15 @@ public class SoundManager {
      * initialize sound from settings.
      */
     public static void initialize() {
-        double[] settings = SettingsManager.loadSettings();
-        if (settings != null) {
-            musicVolume = settings[0];
-            soundVolume = settings[1];
-            System.out.println("SoundManager initialized with saved settings.");
-        } else {
-            System.out.println("SoundManager initialized with default settings.");
-        }
+        new Thread(() -> {
+            double[] settings = SettingsManager.loadSettings();
+            if (settings != null) {
+                musicVolume = settings[0];
+                soundVolume = settings[1];
+                System.out.println("SoundManager initialized with saved settings (background).");
+            } else {
+                System.out.println("SoundManager initialized with default settings (background).");
+            }
+        }).start();
     }
 }

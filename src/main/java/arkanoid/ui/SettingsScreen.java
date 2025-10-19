@@ -233,7 +233,7 @@ public class SettingsScreen extends VBox {
         // Nút Quay lại
         backButton = createControlButton("QUAY LẠI");
         backButton.setOnAction(e -> {
-            saveSettings();
+            new Thread(this::saveSettings).start();
             if (onBack != null) onBack.run();
         });
 
@@ -337,20 +337,27 @@ public class SettingsScreen extends VBox {
      * Tải cài đặt từ file
      */
     private void loadSettings() {
-        double[] settings = SettingsManager.loadSettings();
-        if (settings != null) {
-            currentMusicVolume = settings[0];
-            currentSoundVolume = settings[1];
+        // Tạo một luồng mới để thực hiện việc đọc file trong nền
+        new Thread(() -> {
+            double[] settings = SettingsManager.loadSettings();
+            if (settings != null) {
+                // Sau khi đọc xong, quay lại luồng chính để cập nhật giao diện
+                // một cách an toàn bằng Platform.runLater
+                javafx.application.Platform.runLater(() -> {
+                    currentMusicVolume = settings[0];
+                    currentSoundVolume = settings[1];
 
-            musicVolumeSlider.setValue(currentMusicVolume);
-            soundEffectsSlider.setValue(currentSoundVolume);
+                    musicVolumeSlider.setValue(currentMusicVolume);
+                    soundEffectsSlider.setValue(currentSoundVolume);
 
-            musicVolumeLabel.setText(String.format("%.0f%%", currentMusicVolume * 100));
-            soundEffectsLabel.setText(String.format("%.0f%%", currentSoundVolume * 100));
+                    musicVolumeLabel.setText(String.format("%.0f%%", currentMusicVolume * 100));
+                    soundEffectsLabel.setText(String.format("%.0f%%", currentSoundVolume * 100));
 
-            updateMusicVolume(currentMusicVolume);
-            updateSoundVolume(currentSoundVolume);
-        }
+                    updateMusicVolume(currentMusicVolume);
+                    updateSoundVolume(currentSoundVolume);
+                });
+            }
+        }).start();
     }
 
     public void setOnBack(Runnable action) {

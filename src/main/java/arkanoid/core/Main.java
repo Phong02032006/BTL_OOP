@@ -34,7 +34,8 @@ public class Main extends Application {
     private PlayerNameInputScreen playerNameInputScreen;
     private ModeSelectionScreen modeSelectionScreen;
 
-    private String currentScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER, SETTINGS, HIGHSCORES, NAME_INPUT
+    private String currentScreen = "MENU";
+    private String previousScreen = "MENU"; // MENU, GAME, PAUSE, GAMEOVER, SETTINGS, HIGHSCORES, NAME_INPUT
 
     @Override
     public void start(Stage stage) {
@@ -116,7 +117,7 @@ public class Main extends Application {
 
         // Settings Screen
         settingsScreen = new SettingsScreen();
-        settingsScreen.setOnBack(() -> returnToMenu());
+        settingsScreen.setOnBack(() -> goBackFromSettings());
 
         // High Score Screen
         highScoreScreen = new HighScoreScreen();
@@ -196,8 +197,7 @@ public class Main extends Application {
     private void pauseGame() {
         if (Constant.STATE_RUNNING.equals(gm.getState())) {
             gm.pause();
-            currentScreen = "PAUSE";
-            root.getChildren().add(pauseMenu); // Overlay trên canvas
+            showPauseMenu();
         }
     }
 
@@ -233,6 +233,14 @@ public class Main extends Application {
         menuScreen.updateHighScore(HighScoreManager.getHighestScore());
     }
 
+    private void showPauseMenu() {
+        currentScreen = "PAUSE";
+        root.getChildren().remove(settingsScreen);
+        if (!root.getChildren().contains(pauseMenu)) {
+            root.getChildren().add(pauseMenu);
+        }
+    }
+
     /**
      * gameover.
      */
@@ -260,9 +268,19 @@ public class Main extends Application {
      * Settings.
      */
     private void showSettingsScreen() {
+        previousScreen = currentScreen;
         currentScreen = "SETTINGS";
-        root.getChildren().clear();
+        root.getChildren().remove(pauseMenu);
+        root.getChildren().remove(menuScreen);
         root.getChildren().add(settingsScreen);
+    }
+
+    private void goBackFromSettings() {
+        if ("PAUSE".equals(previousScreen)) {
+            showPauseMenu();
+        } else {
+            showMenuScreen();
+        }
     }
 
     /**
