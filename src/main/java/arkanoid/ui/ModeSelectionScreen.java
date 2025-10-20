@@ -29,7 +29,7 @@ public class ModeSelectionScreen extends VBox {
     }
 
     private void setupUI() {
-        // --- Cấu hình VBox ---
+        // --- VBox figure ---
         this.setAlignment(Pos.CENTER);
         this.setSpacing(25);
         this.setPadding(new Insets(50));
@@ -38,25 +38,25 @@ public class ModeSelectionScreen extends VBox {
                 Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY
         )));
 
-        // --- Tiêu đề ---
+        // --- Banner ---
         Text title = createRetroText("CHOOSE YOUR MODE", Color.ORANGE, 36, true);
 
-        // --- Các nút chọn chế độ ---
+        // --- Button for choosing mode ---
         normalModeButton = createMenuOption("NORMAL MODE");
         funnyModeButton = createMenuOption("FUNNY MODE");
         backButton = createMenuOption("BACK");
 
-        // Gán hành động cho các nút
+        // apply action for each button
         normalModeButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onNormalModeSelected != null) onNormalModeSelected.run();
         });
         funnyModeButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onFunnyModeSelected != null) onFunnyModeSelected.run();
         });
         backButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onBackSelected != null) onBackSelected.run();
         });
 
@@ -75,7 +75,7 @@ public class ModeSelectionScreen extends VBox {
     }
 
     /**
-     * Tái sử dụng từ SimpleMenuScreen để tạo nút bấm nhất quán.
+     * reusing SimpleMenuScreen for syncing button.
      */
     private Button createMenuOption(String text) {
         Button button = new Button(text);
@@ -88,7 +88,7 @@ public class ModeSelectionScreen extends VBox {
                 " -fx-background-color: transparent; " +
                 "-fx-cursor: hand;");
 
-        // Hiệu ứng hover
+        // hover effect
         button.setOnMouseEntered(e -> {
             button.setText("► " + text);
             button.setStyle("-fx-text-fill: #ffffff;" +
@@ -106,7 +106,7 @@ public class ModeSelectionScreen extends VBox {
     }
 
     /**
-     * Tái sử dụng từ SimpleMenuScreen để tạo văn bản retro.
+     * Reusing SimpleMenuScreen for create retro text
      */
     private Text createRetroText(String text, Color color, int size, boolean bold) {
         Text textNode = new Text(text);
@@ -120,7 +120,7 @@ public class ModeSelectionScreen extends VBox {
         return textNode;
     }
 
-    // --- Các phương thức public để lớp Main gán hành động ---
+    // --- public method for Main to call ---
     public void setOnNormalModeSelected(Runnable action) {
         this.onNormalModeSelected = action;
     }

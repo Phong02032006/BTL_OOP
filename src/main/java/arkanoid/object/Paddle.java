@@ -21,8 +21,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Speed ở đây là khoảng mà paddle sẽ dịch chuyển mỗi khi hàm được gọi.
-     * Ví dụ moveLeft thì paddle sẽ "dịch chuyển" 10 pixel tương tự như hàm moveRight.
+     * speed is the distance which paddle move.
      */
     public void moveLeft(double screenWidth) {
         x -= speed;
@@ -39,7 +38,7 @@ public class Paddle extends MovableObject {
     }
 
     /**
-     * Áp dụng hiệu ứng PowerUp (nếu có)
+     * apply powerup effect
      */
 
 

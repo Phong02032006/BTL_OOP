@@ -12,7 +12,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Menu tạm dừng đơn giản (không tích hợp high score)
+ * Pause menu screen (not include highscore)
  */
 public class SimplePauseMenu extends VBox {
 
@@ -70,22 +70,22 @@ public class SimplePauseMenu extends VBox {
 
         // Button actions
         resumeButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onResume != null) onResume.run();
         });
 
         settingsButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onSettings != null) onSettings.run();
         });
 
         restartButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onRestart != null) onRestart.run();
         });
 
         mainMenuButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onMainMenu != null) onMainMenu.run();
         });
 

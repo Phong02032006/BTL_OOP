@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 /**
- * Màn hình Game Over đơn giản (không tích hợp high score)
+ * Simple gameOver Screen (do not include highscore)
  */
 public class SimpleGameOverScreen extends VBox {
 
@@ -76,12 +76,12 @@ public class SimpleGameOverScreen extends VBox {
         mainMenuButton = createRetroButton("MAIN MENU");
 
         restartButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onRestart != null) onRestart.run();
         });
 
         mainMenuButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onMainMenu != null) onMainMenu.run();
         });
 

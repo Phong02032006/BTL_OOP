@@ -3,9 +3,9 @@ package arkanoid.object;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Lớp cơ sở cho các đối tượng có thể di chuyển.
- * dx tốc độ theo trục x(ngang)
- * dy tốc dộ theo trục y(dọc)
+ * Base class for movable objects.
+ * dx: speed on the x-axis (horizontal)
+ * dy: speed on the y-axis (vertical)
  */
 public abstract class MovableObject extends GameObject {
     protected double dx;

@@ -48,7 +48,7 @@ public class LevelLoader {
             double offsetY = 60;
 
 
-            // Duyệt từng dòng ký tự và tạo gạch
+            // Iterate through each line and create bricks
             for (int row = 0; row < numRows; row++) {
                 String currentLine = lines.get(row);
                 for (int col = 0; col < currentLine.length(); col++) {

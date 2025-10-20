@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- * Quản lý việc lưu trữ và tải cài đặt game
+ * Setting and saved manager
  */
 public class SettingsManager {
 
@@ -13,10 +13,10 @@ public class SettingsManager {
     private static final String SOUND_VOLUME_KEY = "sound.volume";
 
     /**
-     * Lưu cài đặt vào file
+     * Setting saved to file
      *
-     * @param musicVolume Âm lượng nhạc nền (0.0 - 1.0)
-     * @param soundVolume Âm lượng hiệu ứng (0.0 - 1.0)
+     * @param musicVolume BG volume (0.0 - 1.0)
+     * @param soundVolume Effect volume (0.0 - 1.0)
      */
     public static void saveSettings(double musicVolume, double soundVolume) {
         try {
@@ -47,9 +47,9 @@ public class SettingsManager {
     }
 
     /**
-     * Tải cài đặt từ file
+     * Upload setting from file
      *
-     * @return Mảng [musicVolume, soundVolume] hoặc null nếu không tải được
+     * @return Array [musicVolume, soundVolume] or null if can't upload
      */
     public static double[] loadSettings() {
         try {
@@ -86,14 +86,14 @@ public class SettingsManager {
     }
 
     /**
-     * Lấy âm lượng nhạc nền mặc định
+     * Getter
      */
     public static double getDefaultMusicVolume() {
         return 0.5;
     }
 
     /**
-     * Lấy âm lượng hiệu ứng mặc định
+     * Getter
      */
     public static double getDefaultSoundVolume() {
         return 1.0;

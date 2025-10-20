@@ -15,7 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Màn hình Settings cho phép điều chỉnh âm lượng game và nhạc nền
+ * Settings screen for adjust volume
  */
 public class SettingsScreen extends VBox {
 
@@ -28,7 +28,7 @@ public class SettingsScreen extends VBox {
 
     private Runnable onBack;
 
-    // Âm lượng hiện tại
+    // Current volume
     private double currentMusicVolume = 0.5;
     private double currentSoundVolume = 1.0;
 
@@ -38,13 +38,13 @@ public class SettingsScreen extends VBox {
     }
 
     private void setupUI() {
-        // Thiết lập VBox
+        // VBox
         this.setAlignment(Pos.CENTER);
         this.setSpacing(30);
         this.setPadding(new Insets(40));
         this.setPrefSize(Constant.SCREEN_WIDTH, Constant.SCREEN_HEIGHT);
 
-        // Background đen như màn hình arcade
+        // black background
         BackgroundFill backgroundFill = new BackgroundFill(
                 Color.BLACK,
                 CornerRadii.EMPTY,
@@ -52,13 +52,13 @@ public class SettingsScreen extends VBox {
         );
         this.setBackground(new Background(backgroundFill));
 
-        // Tiêu đề
+        // Banner
         VBox titleSection = createTitleSection();
 
-        // Phần cài đặt âm lượng
+        // volume settings
         VBox settingsSection = createSettingsSection();
 
-        // Nút điều khiển
+        // control button
         VBox controlSection = createControlSection();
 
         this.getChildren().addAll(titleSection, settingsSection, controlSection);
@@ -74,7 +74,7 @@ public class SettingsScreen extends VBox {
         settingsTitle.setStroke(Color.BLUE);
         settingsTitle.setStrokeWidth(2);
 
-        // Hiệu ứng 3D/pixel art
+        // 3D/pixel art effect
         settingsTitle.setStyle(
                 "-fx-effect: dropshadow(gaussian, #0066ff, 4, 0.8, 2, 2);" +
                         "-fx-effect: dropshadow(gaussian, #ffffff, 2, 1.0, 0, 0);"
@@ -89,14 +89,14 @@ public class SettingsScreen extends VBox {
         settingsBox.setAlignment(Pos.CENTER);
         settingsBox.setPadding(new Insets(20, 100, 20, 100));
 
-        // Âm lượng nhạc nền
+        // bg music volume
         VBox musicSection = createVolumeControl(
                 "ÂM LƯỢNG NHẠC NỀN",
                 "music",
                 0.5
         );
 
-        // Âm lượng hiệu ứng
+        // effect volume
         VBox soundSection = createVolumeControl(
                 "ÂM LƯỢNG HIỆU ỨNG",
                 "sound",
@@ -111,11 +111,11 @@ public class SettingsScreen extends VBox {
         VBox controlBox = new VBox(15);
         controlBox.setAlignment(Pos.CENTER);
 
-        // Tiêu đề
+        // Banner
         Text titleText = createRetroText(title, Color.ORANGE, 18, true);
         controlBox.getChildren().add(titleText);
 
-        // Slider và label
+        // Slider and label
         HBox sliderContainer = new HBox(20);
         sliderContainer.setAlignment(Pos.CENTER);
 
@@ -140,7 +140,7 @@ public class SettingsScreen extends VBox {
             });
         }
 
-        // Test button cho âm thanh
+        // Test button
         Button testButton = createTestButton();
         testButton.setOnAction(e -> {
             SoundManager.playSound("hit_paddle.wav");
@@ -175,7 +175,7 @@ public class SettingsScreen extends VBox {
         slider.setShowTickMarks(true);
         slider.setShowTickLabels(false);
 
-        // Styling cho slider
+        // Styling for slider
         slider.setStyle(
                 "-fx-background-color: transparent;" +
                         "-fx-control-inner-background: #333333;" +
@@ -226,11 +226,11 @@ public class SettingsScreen extends VBox {
         VBox controlBox = new VBox(20);
         controlBox.setAlignment(Pos.CENTER);
 
-        // Nút Reset về mặc định
+        // reset button to default
         resetButton = createControlButton("RESET VỀ MẶC ĐỊNH");
         resetButton.setOnAction(e -> resetToDefaults());
 
-        // Nút Quay lại
+        // back button
         backButton = createControlButton("QUAY LẠI");
         backButton.setOnAction(e -> {
             new Thread(this::saveSettings).start();
@@ -293,21 +293,21 @@ public class SettingsScreen extends VBox {
     }
 
     /**
-     * Cập nhật âm lượng nhạc nền
+     * BG volume update
      */
     private void updateMusicVolume(double volume) {
         SoundManager.setMusicVolume(volume);
     }
 
     /**
-     * Cập nhật âm lượng hiệu ứng
+     * Effect volume update
      */
     private void updateSoundVolume(double volume) {
         SoundManager.setSoundVolume(volume);
     }
 
     /**
-     * Reset về cài đặt mặc định
+     * Reset to default
      */
     private void resetToDefaults() {
         currentMusicVolume = 0.5;
@@ -326,7 +326,7 @@ public class SettingsScreen extends VBox {
     }
 
     /**
-     * Lưu cài đặt vào file
+     * Save settings to file
      */
     private void saveSettings() {
         SettingsManager.saveSettings(currentMusicVolume, currentSoundVolume);
@@ -334,15 +334,15 @@ public class SettingsScreen extends VBox {
     }
 
     /**
-     * Tải cài đặt từ file
+     * Upload settings
      */
     private void loadSettings() {
-        // Tạo một luồng mới để thực hiện việc đọc file trong nền
+        // create new thread to read file
         new Thread(() -> {
             double[] settings = SettingsManager.loadSettings();
             if (settings != null) {
-                // Sau khi đọc xong, quay lại luồng chính để cập nhật giao diện
-                // một cách an toàn bằng Platform.runLater
+                // after read, return to main thread for safety update interface
+                //  by Platform.runLater
                 javafx.application.Platform.runLater(() -> {
                     currentMusicVolume = settings[0];
                     currentSoundVolume = settings[1];

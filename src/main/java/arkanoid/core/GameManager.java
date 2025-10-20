@@ -53,7 +53,6 @@ public class GameManager {
 
     // Game states
 
-
     private static final int width = Constant.SCREEN_WIDTH;
     private static final int height = Constant.SCREEN_HEIGHT;
 
@@ -108,6 +107,7 @@ public class GameManager {
         System.out.println("🔁 Game restarted!");
     }
 
+    // increase ball speed in funny mode
     private void tuneBall(Ball ball) {
         if (gameMode == GameMode.FUNNY) {
             ball.setSpeed(Constant.BALL_SPEED * 1.15);
@@ -235,11 +235,11 @@ public class GameManager {
                             bricks.remove(i);
                             score += 10;
                         }
-                        break; // Mỗi quả bóng chỉ va chạm 1 viên gạch mỗi frame
+                        break; // one ball collide with one brick per frame.
                     }
                 }
 
-                // ball out of screen
+                // ball out of screen.
                 if (ball.getY() + ball.getHeight() > Constant.SCREEN_HEIGHT) {
                     ballIterator.remove();
                 }
@@ -269,7 +269,7 @@ public class GameManager {
             if (pu.getY() > Constant.SCREEN_HEIGHT) {
                 puIterator.remove();
             } else if (pu.checkCollision(paddle)) {
-                // Chỉ lấy bóng đầu tiên trong list để áp dụng hiệu ứng (nếu cần)
+                // choose only the first ball in list if it's needed.
                 pu.applyEffect(paddle, balls.isEmpty() ? null : balls.get(0));
                 SoundManager.playSound("power_up.wav");
                 activePowerUps.add(pu);
@@ -282,7 +282,7 @@ public class GameManager {
         while (activeIterator.hasNext()) {
             PowerUp activePU = activeIterator.next();
             if (activePU.isExpired()) {
-                // only remove the effect of the first ball when the double ball is active
+                // only remove the effect of the first ball when the double ball is active.
                 activePU.removeEffect(paddle, balls.isEmpty() ? null : balls.get(0));
                 activeIterator.remove();
             }
@@ -307,7 +307,7 @@ public class GameManager {
 
             bricks = LevelLoader.loadLevel(levelsToUse[curLevel], Constant.BRICK_WIDTH, Constant.BRICK_HEIGHT, gameMode);
 
-            // Reset lại vị trí paddle và bóng
+            // Reset location of paddle and ball.
             paddle.setX(width / 2.0 - Constant.PADDLE_WIDTH / 2.0);
             paddle.setY(height - 30);
             addNewBallOnPaddle();
@@ -349,10 +349,10 @@ public class GameManager {
     }
 
     /**
-     * Tạo một quả bóng mới trên thanh đỡ và reset trạng thái phóng.
+     * Create new ball on the paddle, reset tune ball.
      */
     private void addNewBallOnPaddle() {
-        balls.clear(); // Xóa hết bóng cũ
+        balls.clear(); // clear old ball.
         ballLaunched = false;
         double ballX = paddle.getX() + paddle.getWidth() / 2 - Constant.BALL_RADIUS;
         double ballY = paddle.getY() - Constant.BALL_RADIUS * 2 - 2;
@@ -398,7 +398,7 @@ public class GameManager {
 
     public boolean hasActiveMultiBallPowerUp() {
         for (PowerUp pu : activePowerUps) {
-            // Kiểm tra xem power-up trong danh sách có phải là loại DoubleBall không
+            // check powerup is double ball or not.
             if (pu instanceof DoubleBall) {
                 return true;
             }
