@@ -79,11 +79,11 @@ public class LevelLoader {
                             if (mode == GameMode.FUNNY) {
                                 double px = x + brickWidth / 2 - Constant.POWERUP_SIZE / 2;
                                 double py = y + brickHeight / 2 - Constant.POWERUP_SIZE / 2;
-                                PowerUp powerUp = new DoubleBall(px, py);
-                                if (Math.random() < 0.95) {
+                                PowerUp powerUp ;
+                                if (Math.random() < 0.80) {
                                     powerUp = new DoubleBall(px, py);
                                 } else {
-                                    powerUp = new ExpandedPaddlePowerUp(px, py);
+                                    powerUp = new FastBallPowerUp(px, py);
                                 }
                                 brick.setPowerUp(powerUp);
                             }
