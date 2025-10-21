@@ -59,7 +59,7 @@ public class Main extends Application {
 
         initScreens();
 
-        // Tạo scene
+        // create scene
         scene = new Scene(root, width, height);
 
         // IO
@@ -300,11 +300,11 @@ public class Main extends Application {
         currentScreen = "NAME_INPUT";
         playerNameInputScreen = new PlayerNameInputScreen(gm.getScore());
         playerNameInputScreen.setOnSubmit(() -> {
-            // Sau khi submit tên, quay về màn hình menu chính
+            // after input name, return to main menu.
             returnToMenu();
         });
         playerNameInputScreen.setOnSkip(() -> {
-            // Sau khi skip, quay về màn hình menu chính
+            // after skip return to main menu.
             returnToMenu();
         });
         root.getChildren().add(playerNameInputScreen);

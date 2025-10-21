@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Quản lý hệ thống điểm cao với khả năng lưu tên người chơi
+ * Highscore manager with ability to save player name.
  */
 public class HighScoreManager {
 
@@ -16,7 +16,7 @@ public class HighScoreManager {
     private static List<HighScoreEntry> highScores = new ArrayList<>();
 
     /**
-     * Lớp đại diện cho một entry điểm cao
+     * Class represents a high scoring entry
      */
     public static class HighScoreEntry implements Comparable<HighScoreEntry>, Serializable {
         private String playerName;
@@ -63,7 +63,7 @@ public class HighScoreManager {
     }
 
     /**
-     * Khởi tạo HighScoreManager và tải dữ liệu
+     * Initialize HighScoreManager and load data
      */
     public static void initialize() {
         loadHighScores();
@@ -71,11 +71,11 @@ public class HighScoreManager {
     }
 
     /**
-     * Thêm điểm mới vào danh sách điểm cao
+     * Add new score to high score list
      *
-     * @param playerName Tên người chơi
-     * @param score      Điểm số
-     * @return true nếu điểm được thêm vào top 10
+     * @param playerName Player name
+     * @param score Score
+     * @return true if score is added to top 10
      */
     public static boolean addHighScore(String playerName, int score) {
         HighScoreEntry newEntry = new HighScoreEntry(playerName, score);
@@ -94,12 +94,12 @@ public class HighScoreManager {
             saveHighScores();
         }).start();
 
-        // Kiểm tra xem điểm có trong top 10 không
+        // check if new highscore added to top 10
         return highScores.contains(newEntry);
     }
 
     /**
-     * Kiểm tra xem điểm có đủ điều kiện vào top 10 không
+     * Check if your score qualifies for the top 10
      */
     public static boolean isHighScore(int score) {
         if (highScores.size() < MAX_HIGHSCORES) {
@@ -109,14 +109,14 @@ public class HighScoreManager {
     }
 
     /**
-     * Lấy danh sách điểm cao
+     * Getter
      */
     public static List<HighScoreEntry> getHighScores() {
         return new ArrayList<>(highScores);
     }
 
     /**
-     * Lấy điểm cao nhất
+     * Get the highest score
      */
     public static int getHighestScore() {
         if (highScores.isEmpty()) {
@@ -126,7 +126,7 @@ public class HighScoreManager {
     }
 
     /**
-     * Lưu điểm cao vào file
+     * Save highscore to file
      */
     private static void saveHighScores() {
         try {
@@ -152,7 +152,7 @@ public class HighScoreManager {
     }
 
     /**
-     * Tải điểm cao từ file
+     * Upload highscore from file
      */
     private static void loadHighScores() {
         try {

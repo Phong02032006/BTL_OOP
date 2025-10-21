@@ -110,13 +110,13 @@ public class HighScoreScreen extends VBox {
 
         clearButton = createControlButton("XÓA TẤT CẢ ĐIỂM");
         clearButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             clearAllScores();
         });
 
         backButton = createControlButton("QUAY LẠI");
         backButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onBack != null) onBack.run();
         });
 

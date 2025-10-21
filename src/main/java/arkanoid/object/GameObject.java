@@ -3,10 +3,10 @@ package arkanoid.object;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * x hoành độ (pixel)
- * y tung độ (pixel)
- * width chiều rộng (pixel)
- * height chiều cao (pixel)
+ * x : horizontal (pixel)
+ * y : vertical (pixel)
+ * width (pixel)
+ * height (pixel)
  */
 
 public abstract class GameObject {

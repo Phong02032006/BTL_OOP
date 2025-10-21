@@ -17,7 +17,7 @@ public class StrongBrick extends Brick {
 
         hitPoints--;
         if (hitPoints == 1) {
-            // ⚡ đổi ảnh khi còn 1 máu
+            // recover when hp == 1.
             image = crackedImage;
         }
         return isDestroyed();

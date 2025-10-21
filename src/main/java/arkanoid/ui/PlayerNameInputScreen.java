@@ -15,7 +15,7 @@ import javafx.scene.text.Text;
 
 
 /**
- * Màn hình nhập tên người chơi khi đạt điểm cao
+ * Screen for input player name to
  */
 public class PlayerNameInputScreen extends VBox {
 
@@ -35,13 +35,13 @@ public class PlayerNameInputScreen extends VBox {
     }
 
     private void setupUI() {
-        // Thiết lập VBox
+        // VBox
         this.setAlignment(Pos.CENTER);
         this.setSpacing(30);
         this.setPadding(new Insets(40));
         this.setPrefSize(Constant.SCREEN_WIDTH, Constant.SCREEN_HEIGHT);
 
-        // Background đen với hiệu ứng overlay
+        // Black background with overlay effect.
         BackgroundFill backgroundFill = new BackgroundFill(
                 Color.color(0, 0, 0, 0.8),
                 CornerRadii.EMPTY,
@@ -49,13 +49,13 @@ public class PlayerNameInputScreen extends VBox {
         );
         this.setBackground(new Background(backgroundFill));
 
-        // Container chính
+        // Main container.
         VBox mainContainer = new VBox(20);
         mainContainer.setAlignment(Pos.CENTER);
         mainContainer.setPadding(new Insets(50));
         mainContainer.setMaxWidth(600);
 
-        // Background cho container
+        // container's background
         BackgroundFill containerFill = new BackgroundFill(
                 Color.color(0.1, 0.1, 0.1, 0.9),
                 new CornerRadii(10),
@@ -72,13 +72,13 @@ public class PlayerNameInputScreen extends VBox {
         );
         mainContainer.setBorder(new Border(borderStroke));
 
-        // Tiêu đề
+        // Banner
         VBox titleSection = createTitleSection();
 
-        // Phần nhập tên
+        // Input Name
         VBox inputSection = createInputSection();
 
-        // Nút điều khiển
+        // Control Button
         VBox controlSection = createControlSection();
 
         mainContainer.getChildren().addAll(titleSection, inputSection, controlSection);
@@ -115,14 +115,14 @@ public class PlayerNameInputScreen extends VBox {
         VBox inputBox = new VBox(15);
         inputBox.setAlignment(Pos.CENTER);
 
-        // TextField để nhập tên
+        // input TextField
         nameTextField = new TextField();
         nameTextField.setFont(Font.font("Courier New", FontWeight.BOLD, 20));
         nameTextField.setPrefWidth(300);
         nameTextField.setPrefHeight(40);
         nameTextField.setPromptText("Nhập tên...");
 
-        // Styling cho TextField
+        // TextField Style
         nameTextField.setStyle(
                 "-fx-background-color: #000000;" +
                         "-fx-text-fill: #ffffff;" +
@@ -172,11 +172,11 @@ public class PlayerNameInputScreen extends VBox {
         VBox controlBox = new VBox(15);
         controlBox.setAlignment(Pos.CENTER);
 
-        // Nút Submit
+        // Submit button
         submitButton = createControlButton("XÁC NHẬN", true);
         submitButton.setOnAction(e -> submitScore());
 
-        // Nút Skip
+        // Skip Button
         skipButton = createControlButton("BỎ QUA", false);
         skipButton.setOnAction(e -> {
             if (onSkip != null) onSkip.run();
@@ -255,7 +255,7 @@ public class PlayerNameInputScreen extends VBox {
     }
 
     private void setupEventHandlers() {
-        // Xử lý Enter key trong TextField
+        // hanlde Enter key on textfield
         nameTextField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 submitScore();
@@ -264,14 +264,14 @@ public class PlayerNameInputScreen extends VBox {
             }
         });
 
-        // Tự động focus vào TextField khi màn hình hiển thị
+        // Auto focus on textfield when screen is on
         nameTextField.requestFocus();
     }
 
     private void submitScore() {
         String playerName = nameTextField.getText().trim();
 
-        // Kiểm tra tên hợp lệ
+        // Name Checked
         if (playerName.isEmpty()) {
             showMessage("Vui lòng nhập tên trước khi xác nhận!");
             return;
@@ -282,16 +282,16 @@ public class PlayerNameInputScreen extends VBox {
             return;
         }
 
-        // Kiểm tra ký tự không hợp lệ
+        // Character Checked
         if (!playerName.matches("[A-Za-z0-9\\s]+")) {
             showMessage("Tên chỉ được chứa chữ cái, số và khoảng trắng!");
             return;
         }
 
-        // Chuyển thành uppercase và loại bỏ khoảng trắng thừa
+        // Convert to Upper Case and delete white space
         playerName = playerName.toUpperCase().replaceAll("\\s+", " ");
 
-        // Thêm điểm vào HighScoreManager
+        // add highscore to HighScoreManager
         boolean isHighScore = HighScoreManager.addHighScore(playerName, playerScore);
 
         if (isHighScore) {

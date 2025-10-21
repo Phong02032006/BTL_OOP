@@ -13,7 +13,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Màn hình Menu đơn giản (không tích hợp high score)
+ * Simple menu Screen (not include highscore)
  */
 public class SimpleMenuScreen extends VBox {
 
@@ -136,22 +136,22 @@ public class SimpleMenuScreen extends VBox {
 
         // Button actions
         startButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onStart != null) onStart.run();
         });
 
         highScoresButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onHighScores != null) onHighScores.run();
         });
 
         settingsButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onSettings != null) onSettings.run();
         });
 
         exitButton.setOnAction(e -> {
-            SoundManager.playSound("clicking.wav");
+            SoundManager.playSound("clickingg.wav");
             if (onExit != null) onExit.run();
         });
 
