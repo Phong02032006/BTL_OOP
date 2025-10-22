@@ -10,9 +10,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 
 /**
- * Lớp trừu tượng PowerUp mô tả các hiệu ứng đặc biệt trong game Arkanoid.
- * - Mỗi PowerUp có loại (type) và thời gian hiệu lực (duration).
- * - Khi va chạm với Paddle, PowerUp được kích hoạt và tạo hiệu ứng tạm thời.
+ * Abstract class PowerUp describe effect for game.
+ * - Each powerup has TYPE and DURATION.
+ * - When hit paddle, type of powerup is apply.
  */
 public abstract class PowerUp extends GameObject {
     protected String type;
@@ -54,10 +54,9 @@ public abstract class PowerUp extends GameObject {
 
     @Override
     public void update() {
-        // PowerUp rơi xuống với tốc độ cố định
+        // power up fall with default speed
         y += Constant.POWERUP_SPEED;
 
-        // Nếu rơi ra khỏi màn hình → có thể bị xoá (GameManager xử lý)
         if (y > Constant.SCREEN_HEIGHT) {
             // Ví dụ: active = false;
         }

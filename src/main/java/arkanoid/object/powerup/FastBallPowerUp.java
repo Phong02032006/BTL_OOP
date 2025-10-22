@@ -5,7 +5,7 @@ import arkanoid.object.Paddle;
 import arkanoid.util.Constant;
 
 /**
- * PowerUp làm bóng di chuyển nhanh hơn 50% trong thời gian giới hạn.
+ * Effect induce speed of ball half as much normal.
  */
 public class FastBallPowerUp extends PowerUp {
     private double originalSpeed;
@@ -29,9 +29,9 @@ public class FastBallPowerUp extends PowerUp {
     public void applyEffect(Paddle paddle, Ball ball) {
         if (ball != null) {
             originalSpeed = ball.getSpeed();
-            ball.setSpeed(originalSpeed * 1.5); // tăng tốc 50%
+            ball.setSpeed(originalSpeed * 1.5);
         }
-        startTime = System.currentTimeMillis(); // Bắt đầu tính thời gian hiệu lực
+        startTime = System.currentTimeMillis(); // start time apply effect
         setActive(true);
     }
 

@@ -11,7 +11,7 @@ public class Laser extends GameObject {
 
     public Laser(double x, double y) {
         super(x, y, Constant.LASER_WIDTH, Constant.LASER_HEIGHT);
-        // Load sprite ngay khi tạo đối tượng
+        // Load sprite
         this.image = SpriteManager.getImage("/images/laser.png");
     }
 

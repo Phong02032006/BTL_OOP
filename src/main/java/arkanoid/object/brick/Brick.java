@@ -50,7 +50,9 @@ public abstract class Brick extends GameObject {
     }
 
     @Override
-    public void update() { /* gạch tĩnh, để trống */ }
+    public void update() {
+
+    }
 
     @Override
     public void render(GraphicsContext gc) {

@@ -40,7 +40,7 @@ public class SimpleMenuScreen extends VBox {
         this.setPadding(new Insets(20));
         this.setPrefSize(Constant.SCREEN_WIDTH, Constant.SCREEN_HEIGHT);
 
-        // Background  arcade
+        // Background arcade
         BackgroundFill backgroundFill = new BackgroundFill(
                 Color.BLACK,
                 CornerRadii.EMPTY,
@@ -59,7 +59,7 @@ public class SimpleMenuScreen extends VBox {
         // Footer
         VBox footerSection = createFooterSection();
 
-        // Layout chính
+        // Layout main
         Region spacer1 = new Region();
         Region spacer2 = new Region();
         VBox.setVgrow(spacer1, Priority.ALWAYS);
@@ -107,14 +107,14 @@ public class SimpleMenuScreen extends VBox {
         VBox titleBox = new VBox(10);
         titleBox.setAlignment(Pos.CENTER);
 
-        // Logo ARKANOID với hiệu ứng pixel art
+        // Logo ARKANOID pixel art
         Text arkanoidTitle = new Text("ARKANOID");
         arkanoidTitle.setFont(Font.font("Courier New", FontWeight.BOLD, 64));
         arkanoidTitle.setFill(Color.WHITE);
         arkanoidTitle.setStroke(Color.BLUE);
         arkanoidTitle.setStrokeWidth(2);
 
-        // Hiệu ứng 3D/pixel art
+        // effect 3D/pixel art
         arkanoidTitle.setStyle(
                 "-fx-effect: dropshadow(gaussian, #0066ff, 4, 0.8, 2, 2);" +
                         "-fx-effect: dropshadow(gaussian, #ffffff, 2, 1.0, 0, 0);"
@@ -128,7 +128,6 @@ public class SimpleMenuScreen extends VBox {
         VBox menuBox = new VBox(15);
         menuBox.setAlignment(Pos.CENTER);
 
-        // Tạo các menu items với hiệu ứng arrow selection
         startButton = createMenuOption(" 1 PLAYER", true);
         highScoresButton = createMenuOption("  HIGH SCORES", false);
         settingsButton = createMenuOption("  SETTINGS", false);
@@ -296,7 +295,7 @@ public class SimpleMenuScreen extends VBox {
     }
 
     /**
-     * Cập nhật điểm hiện tại (nếu cần)
+     * update current score
      */
     public void updateCurrentScore(int score) {
         currentScoreText.setText(String.format("%05d", score));

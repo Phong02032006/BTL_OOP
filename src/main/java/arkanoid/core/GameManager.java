@@ -27,7 +27,7 @@ public class GameManager {
     private long lastLaserFireTime = 0;
 
     private GameManager() {
-    }
+      }
 
     public static GameManager getInstance() {
         if (instance == null) {
@@ -50,8 +50,6 @@ public class GameManager {
     private int score;
     private int lives;
     private String state;
-
-    // Game states
 
     private static final int width = Constant.SCREEN_WIDTH;
     private static final int height = Constant.SCREEN_HEIGHT;
@@ -78,7 +76,6 @@ public class GameManager {
         movingRight = false;
         curLevel = 0;
 
-        //create object
         background = new Background("/images/background.png");
         paddle = new Paddle(
                 width / 2.0 - 50, height - 30,
@@ -107,14 +104,15 @@ public class GameManager {
         System.out.println("🔁 Game restarted!");
     }
 
-    // increase ball speed in funny mode
+    /**
+     * increase ball speed in funny mode
+      */
     private void tuneBall(Ball ball) {
         if (gameMode == GameMode.FUNNY) {
             ball.setSpeed(Constant.BALL_SPEED * 1.15);
         }
     }
 
-    // input
     public void onKeyPressed(String key) {
         switch (key) {
             case "LEFT":
@@ -434,7 +432,6 @@ public class GameManager {
         }
     }
 
-    //  Getters
     public GameMode getGameMode() {
         return gameMode;
     }
