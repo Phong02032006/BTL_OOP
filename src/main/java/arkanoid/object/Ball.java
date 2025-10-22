@@ -100,54 +100,70 @@ public class Ball extends MovableObject {
             return false;
         }
 
-        double eps = 0.08;
-        double pL = prevX, pR = prevX + width, pT = prevY, pB = prevY + height;
-        double oL = other.x, oR = other.x + other.width, oT = other.y, oB = other.y + other.height;
+        // A small buffer to prevent objects from sticking together after a collision.
+        double collisionOffset = 0.08;
 
-        // Priority by last-frame vertical position
-        if (pB <= oT) {
-            y = oT - height - eps;
+        // Coordinates of the ball's edges in the previous frame.
+        double previousBallLeft = prevX;
+        double previousBallRight = prevX + width;
+        double previousBallTop = prevY;
+        double previousBallBottom = prevY + height;
+
+        // Coordinates of the colliding object's edges.
+        double otherObjectLeft = other.x;
+        double otherObjectRight = other.x + other.width;
+        double otherObjectTop = other.y;
+        double otherObjectBottom = other.y + other.height;
+
+        // Prioritize handling based on the previous frame's position to determine the collision direction.
+        // Check for collision from top to bottom.
+        if (previousBallBottom <= otherObjectTop) {
+            y = otherObjectTop - height - collisionOffset;
             dy = -Math.abs(dy);
             return true;
         }
-        if (pT >= oB) {
-            y = oB + eps;
+        // Check for collision from bottom to top.
+        if (previousBallTop >= otherObjectBottom) {
+            y = otherObjectBottom + collisionOffset;
             dy = Math.abs(dy);
             return true;
         }
-        if (pR <= oL) {
-            x = oL - width - eps;
+        // Check for collision from left to right.
+        if (previousBallRight <= otherObjectLeft) {
+            x = otherObjectLeft - width - collisionOffset;
             dx = -Math.abs(dx);
             return true;
         }
-        if (pL >= oR) {
-            x = oR + eps;
+        // Check for collision from right to left.
+        if (previousBallLeft >= otherObjectRight) {
+            x = otherObjectRight + collisionOffset;
             dx = Math.abs(dx);
             return true;
         }
 
-        // Fallback: choose smaller overlap
-        double overlapL = (x + width) - oL;
-        double overlapR = oR - x;
-        double overlapT = (y + height) - oT;
-        double overlapB = oB - y;
-        double minX = Math.min(overlapL, overlapR);
-        double minY = Math.min(overlapT, overlapB);
+        // Fallback: if the direction cannot be determined from the previous position, choose the direction with the smallest overlap.
+        double overlapLeft = (x + width) - otherObjectLeft;
+        double overlapRight = otherObjectRight - x;
+        double overlapTop = (y + height) - otherObjectTop;
+        double overlapBottom = otherObjectBottom - y;
 
-        if (minX < minY) {
-            if (overlapL < overlapR) {
-                x = oL - width - eps;
+        double minHorizontalOverlap = Math.min(overlapLeft, overlapRight);
+        double minVerticalOverlap = Math.min(overlapTop, overlapBottom);
+
+        if (minHorizontalOverlap < minVerticalOverlap) { // Handle horizontal collision
+            if (overlapLeft < overlapRight) {
+                x = otherObjectLeft - width - collisionOffset;
                 dx = -Math.abs(dx);
             } else {
-                x = oR + eps;
+                x = otherObjectRight + collisionOffset;
                 dx = Math.abs(dx);
             }
-        } else {
-            if (overlapT < overlapB) {
-                y = oT - height - eps;
+        } else { // Handle vertical collision
+            if (overlapTop < overlapBottom) {
+                y = otherObjectTop - height - collisionOffset;
                 dy = -Math.abs(dy);
             } else {
-                y = oB + eps;
+                y = otherObjectBottom + collisionOffset;
                 dy = Math.abs(dy);
             }
         }
@@ -208,8 +224,15 @@ public class Ball extends MovableObject {
         }
     }
 
-    // --- Getters & Setters ---
-    public double getSpeed() { return speed; }
-    public void setSpeed(double speed) { this.speed = speed; }
-    public void setDirectionY(int dy) { this.dy = dy; }
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void setDirectionY(int dy) {
+        this.dy = dy;
+    }
 }

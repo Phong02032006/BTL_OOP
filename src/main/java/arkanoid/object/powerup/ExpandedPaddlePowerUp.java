@@ -5,8 +5,8 @@ import arkanoid.object.Paddle;
 import arkanoid.util.*;
 
 /**
- * PowerUp mở rộng Paddle tạm thời trong 5 giây.
- * Khi Paddle chạm, kích thước sẽ tăng 1.5 lần, sau đó trở lại bình thường.
+ * Expand paddle in 5 seconds.
+ * When it hits paddle, expand a half more than normal.
  */
 public class ExpandedPaddlePowerUp extends PowerUp {
     private double originalWidth;
@@ -37,7 +37,6 @@ public class ExpandedPaddlePowerUp extends PowerUp {
 
     @Override
     public void update() {
-        // PowerUp rơi xuống
         y += Constant.POWERUP_SPEED;
     }
 

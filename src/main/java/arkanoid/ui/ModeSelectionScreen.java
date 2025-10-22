@@ -29,7 +29,7 @@ public class ModeSelectionScreen extends VBox {
     }
 
     private void setupUI() {
-        // --- VBox figure ---
+        // VBox figure
         this.setAlignment(Pos.CENTER);
         this.setSpacing(25);
         this.setPadding(new Insets(50));
@@ -38,10 +38,10 @@ public class ModeSelectionScreen extends VBox {
                 Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY
         )));
 
-        // --- Banner ---
+        // Banner
         Text title = createRetroText("CHOOSE YOUR MODE", Color.ORANGE, 36, true);
 
-        // --- Button for choosing mode ---
+        // Button for choosing mode
         normalModeButton = createMenuOption("NORMAL MODE");
         funnyModeButton = createMenuOption("FUNNY MODE");
         backButton = createMenuOption("BACK");
@@ -70,7 +70,7 @@ public class ModeSelectionScreen extends VBox {
         VBox.setVgrow(spacer1, Priority.ALWAYS);
         VBox.setVgrow(spacer2, Priority.ALWAYS);
 
-        // Thêm các thành phần vào layout chính
+        // Add to main layout
         this.getChildren().addAll(title, spacer1, buttonBox, spacer2);
     }
 
@@ -120,7 +120,7 @@ public class ModeSelectionScreen extends VBox {
         return textNode;
     }
 
-    // --- public method for Main to call ---
+    // public method for Main to call
     public void setOnNormalModeSelected(Runnable action) {
         this.onNormalModeSelected = action;
     }

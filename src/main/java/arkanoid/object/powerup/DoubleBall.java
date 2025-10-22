@@ -6,13 +6,12 @@ import arkanoid.object.Paddle;
 import arkanoid.util.Constant;
 
 /**
- * PowerUp nhân đôi bóng (Double Ball)
- * Khi Paddle chạm, sẽ tạo thêm 1 bóng phụ di chuyển ngược hướng với bóng chính.
- * Hiệu ứng kéo dài trong một khoảng thời gian, sau đó bóng phụ biến mất.
+ * powerup double ball.
+ * when hit paddle, extra ball is spawn in another direction.
  */
 public class DoubleBall extends PowerUp {
 
-    private Ball extraBall;  // lưu bóng phụ để xoá sau
+    private Ball extraBall;  // save extra ball
 
     public DoubleBall(double x, double y) {
         super(

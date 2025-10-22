@@ -42,7 +42,6 @@ public class Paddle extends MovableObject {
      */
 
 
-
     @Override
     public void update() {
     }
@@ -52,13 +51,11 @@ public class Paddle extends MovableObject {
         if (image != null) {
             gc.drawImage(image, x, y, width, height);
         } else {
-            // fallback khi ảnh chưa load (hoặc lỗi)
             gc.setFill(color);
             gc.fillRect(x, y, width, height);
         }
     }
 
-    //  Getter / Setter bổ sung
     public double getSpeed() {
         return speed;
     }

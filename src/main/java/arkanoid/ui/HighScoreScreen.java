@@ -64,7 +64,7 @@ public class HighScoreScreen extends VBox {
         highScoreTitle.setStroke(Color.GOLD);
         highScoreTitle.setStrokeWidth(2);
 
-        // Hiệu ứng 3D/pixel art
+        // 3D/pixel art effect
         highScoreTitle.setStyle(
                 "-fx-effect: dropshadow(gaussian, #ffd700, 4, 0.8, 2, 2);" +
                         "-fx-effect: dropshadow(gaussian, #ffffff, 2, 1.0, 0, 0);"
@@ -83,7 +83,7 @@ public class HighScoreScreen extends VBox {
         HBox header = createScoreHeader();
         scoresBox.getChildren().add(header);
 
-        // Container cho danh sách điểm
+        // Container
         scoreListContainer = new VBox(5);
         scoreListContainer.setAlignment(Pos.CENTER);
         scoreListContainer.setPadding(new Insets(20, 0, 20, 0));
@@ -230,7 +230,7 @@ public class HighScoreScreen extends VBox {
     }
 
     /**
-     * Lấy màu cho rank
+     * Rank color
      */
     private Color getRankColor(int rank) {
         switch (rank) {
