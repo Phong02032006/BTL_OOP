@@ -2,7 +2,7 @@
 
 ## Giới thiệu
 BTL môn **Lập trình Hướng Đối Tượng (OOP)**, được phát triển bằng **Java + JavaFX**.  
-Trò chơi **Arkanoid** mô phỏng lại gameplay cổ điển: người chơi điều khiển thanh paddle để bật bóng phá gạch, qua nhiều cấp độ với các hiệu ứng đặc biệt (Power-Up).
+Game **Arkanoid** mô phỏng lại gameplay cổ điển: người chơi điều khiển thanh paddle để bật bóng phá gạch, qua nhiều cấp độ với các hiệu ứng đặc biệt (Power-Up).
 
 ---
 ## Thành viên
@@ -23,17 +23,19 @@ Trò chơi **Arkanoid** mô phỏng lại gameplay cổ điển: người chơi 
 ---
 
 ## Cấu trúc thư mục
+```plaintext
 src/
-├─ main/
-│ ├─ java/arkanoid/
-│ │ ├─ core/ → Lõi xử lý game (GameManager, Renderer, Main)
-│ │ ├─ object/ → Các đối tượng: Ball, Paddle, Brick, PowerUp...
-│ │ ├─ ui/ → Giao diện người chơi
-│ │ └─ util/ → Hằng số, bộ nạp level, âm thanh, chế độ
-│ └─ resources/
-│ └─ levels/ → File định nghĩa màn chơi
-└─ test/
-└─ java/arkanoid/ → Các lớp kiểm thử JUnit
+ ├─ main/
+ │   ├─ java/arkanoid/
+ │   │    ├─ core/        → Lõi xử lý game (GameManager, Renderer, Main)
+ │   │    ├─ object/      → Các đối tượng: Ball, Paddle, Brick, PowerUp...
+ │   │    ├─ ui/          → Giao diện người chơi
+ │   │    └─ util/        → Hằng số, bộ nạp level, âm thanh, chế độ
+ │   └─ resources/
+ │        └─ levels/      → File định nghĩa màn chơi
+ └─ test/
+      └─ java/arkanoid/   → Các lớp kiểm thử JUnit
+```
 
 ---
 
