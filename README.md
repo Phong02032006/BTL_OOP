@@ -33,6 +33,8 @@ src/
  │   │    └─ util/        → Hằng số, bộ nạp level, âm thanh, chế độ
  │   └─ resources/
  │        └─ levels/      → File định nghĩa màn chơi
+ │        └─ sounds/      → File âm thanh của game
+ │        └─ images/      → File hình ảnh của từng object trong game
  └─ test/
       └─ java/arkanoid/   → Các lớp kiểm thử JUnit
 ```
