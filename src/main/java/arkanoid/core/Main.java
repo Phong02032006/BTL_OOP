@@ -76,6 +76,9 @@ public class Main extends Application {
                 } else if ("GAME".equals(currentScreen) && Constant.STATE_GAME_OVER.equals(gm.getState())) {
                     showGameOverScreen();
                 }
+                else if ("GAME".equals(currentScreen) && Constant.STATE_VICTORY.equals(gm.getState())) {
+                    showPlayerNameInputScreen();
+                }
             }
         };
         gameLoop.start();
@@ -245,10 +248,11 @@ public class Main extends Application {
      * gameover.
      */
     private void showGameOverScreen() {
-        if (HighScoreManager.isHighScore(gm.getScore())) {
-            showPlayerNameInputScreen();
-        } else {
-            currentScreen = "GAMEOVER";
+        if ("GAMEOVER".equals(currentScreen)) {
+            return;
+        }
+       else {
+            currentScreen = "GAMEOVER"; // Đặt trạng thái
             gameOverScreen.setScore(gm.getScore());
             root.getChildren().clear();
             root.getChildren().add(gameOverScreen);

@@ -12,7 +12,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Màn hình chọn chế độ chơi với phong cách retro.
+ * Mode Select.
  */
 public class ModeSelectionScreen extends VBox {
 
@@ -62,7 +62,7 @@ public class ModeSelectionScreen extends VBox {
 
         VBox buttonBox = new VBox(15);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(normalModeButton, funnyModeButton, backButton); // << THÊM NÚT BACK VÀO ĐÂY
+        buttonBox.getChildren().addAll(normalModeButton, funnyModeButton, backButton);
 
 
         Region spacer1 = new Region();

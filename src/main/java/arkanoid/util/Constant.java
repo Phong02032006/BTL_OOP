@@ -17,6 +17,7 @@ public class Constant {
     public static final String STATE_RUNNING = "RUNNING";
     public static final String STATE_PAUSED = "PAUSED";
     public static final String STATE_GAME_OVER = "GAME_OVER";
+    public static final String STATE_VICTORY = "VICTORY";
 
     // Border
     public static final double BORDER_RIGHT = Constant.SCREEN_WIDTH - 16;
