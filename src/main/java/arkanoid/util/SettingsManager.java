@@ -24,7 +24,7 @@ public class SettingsManager {
             props.setProperty(MUSIC_VOLUME_KEY, String.valueOf(musicVolume));
             props.setProperty(SOUND_VOLUME_KEY, String.valueOf(soundVolume));
 
-            // Tạo file trong thư mục user.home
+            // Create file in path user.home
             String userHome = System.getProperty("user.home");
             String settingsDir = userHome + File.separator + ".arkanoid";
             File dir = new File(settingsDir);

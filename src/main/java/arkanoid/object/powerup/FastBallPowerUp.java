@@ -42,5 +42,4 @@ public class FastBallPowerUp extends PowerUp {
         }
         setActive(false);
     }
-
 }

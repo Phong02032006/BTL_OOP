@@ -42,7 +42,6 @@ public class Renderer {
 
         gc.setFont(Font.font("Courier New", FontWeight.BOLD, 20));
 
-
         gc.setFill(Color.WHITE);          // text color
         gc.setStroke(Color.BLACK);      // border
         gc.setLineWidth(2);             // border thickness
@@ -70,8 +69,6 @@ public class Renderer {
             gc.fillText("State: " + state, 20, 90);
         }
     }
-
-
 
     public void renderAll(GameManager game, double width, double height) {
         clear(width, height);
