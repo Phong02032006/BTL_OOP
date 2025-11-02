@@ -37,11 +37,6 @@ public class Paddle extends MovableObject {
         }
     }
 
-    /**
-     * apply powerup effect
-     */
-
-
     @Override
     public void update() {
     }

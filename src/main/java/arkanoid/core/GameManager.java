@@ -214,7 +214,7 @@ public class GameManager {
 
                 // paddle collide
                 if (ball.checkCollision(paddle) && ball.getDy() > 0) {
-                    ball.bounceOff(paddle);
+                    ball.sweepBounceOff(paddle);
                     ball.setY(paddle.getY() - ball.getHeight() - 1); // Tránh bị kẹt
                     SoundManager.playSound("hit_paddle.wav");
                 }
@@ -334,7 +334,6 @@ public class GameManager {
         }
     }
 
-
     private void fireLasers() {
         double laserX1 = paddle.getX() + 7;
         double laserX2 = paddle.getX() + paddle.getWidth() - 11;
@@ -364,7 +363,6 @@ public class GameManager {
         SoundManager.playSound("end_game.wav");
         System.out.println("Game Over! Final Score: " + score);
     }
-
 
     public void pause() {
         if (Constant.STATE_RUNNING.equals(state)) {
@@ -422,7 +420,6 @@ public class GameManager {
             balls.add(newBall);
         }
     }
-
 
     public void removeExtraBalls() {
         if (balls.size() > 1) {

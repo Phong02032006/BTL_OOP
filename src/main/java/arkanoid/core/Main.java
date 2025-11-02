@@ -172,7 +172,7 @@ public class Main extends Application {
     }
 
     /**
-     *  main menu.
+     * main menu.
      */
     private void showMenuScreen() {
         currentScreen = "MENU";

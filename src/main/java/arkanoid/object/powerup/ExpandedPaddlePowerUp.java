@@ -39,6 +39,4 @@ public class ExpandedPaddlePowerUp extends PowerUp {
     public void update() {
         y += Constant.POWERUP_SPEED;
     }
-
-
 }
