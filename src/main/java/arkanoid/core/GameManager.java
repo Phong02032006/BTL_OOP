@@ -101,7 +101,7 @@ public class GameManager {
 
     public void restart() {
         start(gameMode);
-        System.out.println("🔁 Game restarted!");
+        System.out.println("Game restarted!");
     }
 
     /**
@@ -313,7 +313,7 @@ public class GameManager {
             System.out.println("Level " + (curLevel + 1) + " start!");
 
         } else {
-            state = Constant.STATE_GAME_OVER;
+            state = Constant.STATE_VICTORY;
             System.out.println("All levels for " + gameMode + " mode cleared! Final Score: " + score);
         }
     }

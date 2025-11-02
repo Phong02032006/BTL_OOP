@@ -264,7 +264,7 @@ public class PlayerNameInputScreen extends VBox {
             }
         });
 
-        // Auto focus on textfield when screen is on
+        //Auto focus on textfield when screen is on
         nameTextField.requestFocus();
     }
 
